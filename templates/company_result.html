@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ company_name }} Resume Match | CareerAI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            color: #ffffff;
+
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(92, 103, 255, 0.18),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(87, 185, 255, 0.10),
+                    transparent 30%
+                ),
+                #070c1a;
+        }
+
+        .page {
+            width: 92%;
+            max-width: 1250px;
+
+            margin: auto;
+
+            padding: 55px 0 90px;
+        }
+
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .eyebrow {
+            color: #8792ff;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 1.8px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 13px;
+        }
+
+        h1 {
+            margin: 0;
+
+            font-size: clamp(38px, 5vw, 58px);
+
+            line-height: 1.05;
+
+            letter-spacing: -2px;
+
+            font-weight: 850;
+        }
+
+        .gradient {
+            background:
+                linear-gradient(
+                    90deg,
+                    #eeeeff,
+                    #a98aff,
+                    #55b9ff
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .subtitle {
+            margin: 15px 0 35px;
+
+            color: #8e9ab4;
+
+            font-size: 16px;
+
+            line-height: 1.7;
+        }
+
+
+        /* ================================
+           COMPANY BAR
+        ================================= */
+
+        .company-bar {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 25px;
+
+            padding: 22px 25px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid rgba(115, 130, 175, 0.20);
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(18, 28, 52, 0.95),
+                    rgba(9, 17, 34, 0.96)
+                );
+        }
+
+        .company-info small {
+            display: block;
+
+            margin-bottom: 6px;
+
+            color: #74809a;
+
+            font-size: 10px;
+            font-weight: 800;
+
+            letter-spacing: 1.2px;
+
+            text-transform: uppercase;
+        }
+
+        .company-info h2 {
+            margin: 0;
+
+            font-size: 25px;
+        }
+
+        .company-info p {
+            margin: 5px 0 0;
+
+            color: #8995ae;
+
+            font-size: 13px;
+        }
+
+        .new-analysis {
+            padding: 12px 18px;
+
+            border: 1px solid rgba(120, 135, 255, 0.30);
+
+            border-radius: 12px;
+
+            background: rgba(90, 105, 245, 0.08);
+
+            color: #aab3ff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+
+        /* ================================
+           SCORE SECTION
+        ================================= */
+
+        .score-grid {
+            display: grid;
+
+            grid-template-columns: 1.15fr 0.85fr;
+
+            gap: 25px;
+
+            margin-bottom: 25px;
+        }
+
+        .score-card,
+        .resume-card {
+            border: 1px solid rgba(115, 130, 175, 0.20);
+
+            border-radius: 25px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(17, 27, 51, 0.96),
+                    rgba(8, 16, 32, 0.98)
+                );
+        }
+
+
+        /* ================================
+           SCORE
+        ================================= */
+
+        .score-card {
+            padding: 35px;
+        }
+
+        .section-label {
+            margin-bottom: 25px;
+
+            color: #7e8aa5;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 1.3px;
+
+            text-transform: uppercase;
+        }
+
+        .score-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 35px;
+        }
+
+        .score-circle {
+            width: 190px;
+            height: 190px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(
+                    #7565ff
+                    calc(var(--score) * 1%),
+                    #18223b 0
+                );
+
+            position: relative;
+        }
+
+        .score-circle::after {
+            content: "";
+
+            position: absolute;
+
+            width: 148px;
+            height: 148px;
+
+            border-radius: 50%;
+
+            background: #10182c;
+        }
+
+        .score-number,
+        .score-out {
+            position: relative;
+
+            z-index: 2;
+        }
+
+        .score-number {
+            font-size: 48px;
+
+            font-weight: 850;
+
+            line-height: 1;
+        }
+
+        .score-out {
+            margin-top: 5px;
+
+            color: #727e99;
+
+            font-size: 11px;
+        }
+
+        .score-copy h3 {
+            margin: 0 0 10px;
+
+            font-size: 24px;
+        }
+
+        .score-copy p {
+            margin: 0;
+
+            color: #8995ae;
+
+            line-height: 1.65;
+
+            font-size: 14px;
+        }
+
+
+        /* ================================
+           RESUME CARD
+        ================================= */
+
+        .resume-card {
+            padding: 30px;
+        }
+
+        .resume-card h3 {
+            margin: 0 0 20px;
+
+            font-size: 18px;
+        }
+
+        .resume-file {
+            padding: 18px;
+
+            border-radius: 15px;
+
+            background: rgba(255, 255, 255, 0.035);
+
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .resume-file strong {
+            display: block;
+
+            font-size: 14px;
+
+            word-break: break-word;
+        }
+
+        .resume-file span {
+            display: block;
+
+            margin-top: 6px;
+
+            color: #707d97;
+
+            font-size: 12px;
+        }
+
+
+        /* ================================
+           TWO COLUMNS
+        ================================= */
+
+        .two-columns {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 25px;
+
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            padding: 30px;
+
+            border: 1px solid rgba(115, 130, 175, 0.20);
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15, 25, 47, 0.96),
+                    rgba(8, 16, 32, 0.98)
+                );
+        }
+
+        .panel h2 {
+            margin: 0 0 22px;
+
+            font-size: 21px;
+        }
+
+
+        /* ================================
+           SKILLS
+        ================================= */
+
+        .skills {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+        }
+
+        .skill {
+            padding: 9px 13px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .matched {
+            color: #67e6ba;
+
+            background: rgba(38, 205, 145, 0.08);
+
+            border: 1px solid rgba(38, 205, 145, 0.25);
+        }
+
+        .missing {
+            color: #ffbf72;
+
+            background: rgba(255, 170, 60, 0.07);
+
+            border: 1px solid rgba(255, 170, 60, 0.22);
+        }
+
+        .empty {
+            color: #78849d;
+
+            font-size: 13px;
+        }
+
+
+        /* ================================
+           IMPROVEMENT
+        ================================= */
+
+        .improvement {
+            padding: 30px;
+
+            margin-bottom: 25px;
+
+            border: 1px solid rgba(115, 130, 175, 0.20);
+
+            border-radius: 24px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(19, 28, 52, 0.96),
+                    rgba(8, 16, 32, 0.98)
+                );
+        }
+
+        .improvement h2 {
+            margin: 0 0 12px;
+
+            font-size: 22px;
+        }
+
+        .improvement-text {
+            margin: 0 0 22px;
+
+            color: #a5afc5;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+        }
+
+        .recommendation {
+            padding: 20px;
+
+            border-radius: 16px;
+
+            border: 1px solid rgba(111, 124, 255, 0.20);
+
+            background: rgba(90, 105, 245, 0.06);
+
+            color: #b9c0ff;
+
+            line-height: 1.6;
+
+            font-size: 14px;
+        }
+
+
+        /* ================================
+           FOOTER ACTION
+        ================================= */
+
+        .actions {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            margin-top: 35px;
+        }
+
+        .action-btn {
+            padding: 14px 24px;
+
+            border-radius: 13px;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 750;
+        }
+
+        .primary {
+            background:
+                linear-gradient(
+                    135deg,
+                    #5865f2,
+                    #7565ff
+                );
+
+            color: white;
+
+            box-shadow:
+                0 12px 30px rgba(88, 101, 242, 0.22);
+        }
+
+        .secondary {
+            border: 1px solid #2b3753;
+
+            background: #10182b;
+
+            color: #9ba6be;
+        }
+
+
+        @media (max-width: 850px) {
+
+            .score-grid,
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .score-row {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+            .company-bar {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .page {
+                width: 94%;
+
+                padding-top: 30px;
+            }
+
+            .score-card,
+            .resume-card,
+            .panel,
+            .improvement {
+                padding: 22px;
+            }
+
+            .score-circle {
+                width: 160px;
+                height: 160px;
+            }
+
+            .score-circle::after {
+                width: 124px;
+                height: 124px;
+            }
+
+            .score-number {
+                font-size: 40px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<main class="page">
+
+    <!-- ================================
+         HEADER
+    ================================= -->
+
+    <div class="eyebrow">
+        ✓ COMPANY-SPECIFIC ANALYSIS
+    </div>
+
+    <h1>
+        Your Resume,
+        <span class="gradient">Analyzed.</span>
+    </h1>
+
+    <p class="subtitle">
+        Here's how your resume matches the requirements
+        for {{ company_name }}.
+    </p>
+
+
+    <!-- ================================
+         COMPANY
+    ================================= -->
+
+    <div class="company-bar">
+
+        <div class="company-info">
+
+            <small>
+                Selected Company
+            </small>
+
+            <h2>
+                {{ company_name }}
+            </h2>
+
+            <p>
+                {{ company.role }}
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for(
+                'dashboard.company_resume_upload',
+                company_name=company_name
+            ) }}"
+            class="new-analysis"
+        >
+            ↻ Analyze Another Resume
+        </a>
+
+    </div>
+
+
+    <!-- ================================
+         SCORE
+    ================================= -->
+
+    <section class="score-grid">
+
+        <div class="score-card">
+
+            <div class="section-label">
+                Resume Match Score
+            </div>
+
+            <div class="score-row">
+
+                <div
+                    class="score-circle"
+                    style="--score: {{ comparison_result.match_percentage }};"
+                >
+
+                    <div class="score-number">
+                        {{ comparison_result.match_percentage }}%
+                    </div>
+
+                    <div class="score-out">
+                        COMPANY MATCH
+                    </div>
+
+                </div>
+
+
+                <div class="score-copy">
+
+                    <h3>
+                        {{ company_name }} Match
+                    </h3>
+
+                    <p>
+                        {{ comparison_result.recommendation }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESUME -->
+
+        <div class="resume-card">
+
+            <h3>
+                📄 Resume Analyzed
+            </h3>
+
+            <div class="resume-file">
+
+                <strong>
+                    {{ filename }}
+                </strong>
+
+                <span>
+                    Resume successfully processed for
+                    {{ company_name }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         MATCHED + MISSING
+    ================================= -->
+
+    <section class="two-columns">
+
+
+        <!-- MATCHED -->
+
+        <div class="panel">
+
+            <h2>
+                ✅ Skills You Already Have
+            </h2>
+
+            {% if comparison_result.matched_skills %}
+
+            <div class="skills">
+
+                {% for skill in comparison_result.matched_skills %}
+
+                <span class="skill matched">
+                    ✓ {{ skill }}
+                </span>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="empty">
+                No required company skills were detected yet.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- MISSING -->
+
+        <div class="panel">
+
+            <h2>
+                ⚡ Skills To Add
+            </h2>
+
+            {% if comparison_result.missing_skills %}
+
+            <div class="skills">
+
+                {% for skill in comparison_result.missing_skills %}
+
+                <span class="skill missing">
+                    + {{ skill }}
+                </span>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="empty">
+                Excellent! All listed technical requirements
+                were detected in your resume.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         IMPROVEMENT
+    ================================= -->
+
+    <section class="improvement">
+
+        <h2>
+            ✦ What You Should Improve
+        </h2>
+
+        <p class="improvement-text">
+            {{ comparison_result.recommendation }}
+        </p>
+
+
+        <div class="recommendation">
+
+            <strong>
+                {{ company_name }} Focus:
+            </strong>
+
+            {{ comparison_result.focus }}
+
+            <br><br>
+
+            <strong>
+                Education:
+            </strong>
+
+            {{ comparison_result.education }}
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         ACTIONS
+    ================================= -->
+
+    <div class="actions">
+
+        <a
+            href="{{ url_for('dashboard.dashboard') }}"
+            class="action-btn primary"
+        >
+            ← Back to Dashboard
+        </a>
+
+        <a
+            href="{{ url_for(
+                'dashboard.company_resume_upload',
+                company_name=company_name
+            ) }}"
+            class="action-btn secondary"
+        >
+            ↻ Upload Another Resume
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

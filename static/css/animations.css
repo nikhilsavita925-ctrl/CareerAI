@@ -1,0 +1,698 @@
+/* =============================================================
+   CAREERAI — SHARED ANIMATION UTILITIES
+   Premium micro-interactions and visual effects
+   ============================================================= */
+
+
+/* ----------------------------------------------------------
+   PAGE ENTRANCE
+   ---------------------------------------------------------- */
+
+.page-enter {
+    animation: pageEnter 0.7s ease both;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        filter: blur(6px);
+    }
+
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   SCROLL REVEAL
+   Elements with [data-reveal] fade/slide in on scroll
+   ---------------------------------------------------------- */
+
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(36px);
+    transition:
+        opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+[data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Direction variants */
+[data-reveal="left"] {
+    transform: translateX(-40px);
+}
+
+[data-reveal="left"].revealed {
+    transform: translateX(0);
+}
+
+[data-reveal="right"] {
+    transform: translateX(40px);
+}
+
+[data-reveal="right"].revealed {
+    transform: translateX(0);
+}
+
+[data-reveal="scale"] {
+    transform: scale(0.92);
+}
+
+[data-reveal="scale"].revealed {
+    transform: scale(1);
+}
+
+
+/* ----------------------------------------------------------
+   STAGGER CHILDREN
+   Container with [data-stagger] delays each child
+   ---------------------------------------------------------- */
+
+[data-stagger]>* {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-stagger].revealed>*:nth-child(1) {
+    transition-delay: 0.05s;
+}
+
+[data-stagger].revealed>*:nth-child(2) {
+    transition-delay: 0.12s;
+}
+
+[data-stagger].revealed>*:nth-child(3) {
+    transition-delay: 0.19s;
+}
+
+[data-stagger].revealed>*:nth-child(4) {
+    transition-delay: 0.26s;
+}
+
+[data-stagger].revealed>*:nth-child(5) {
+    transition-delay: 0.33s;
+}
+
+[data-stagger].revealed>*:nth-child(6) {
+    transition-delay: 0.40s;
+}
+
+[data-stagger].revealed>*:nth-child(7) {
+    transition-delay: 0.47s;
+}
+
+[data-stagger].revealed>*:nth-child(8) {
+    transition-delay: 0.54s;
+}
+
+[data-stagger].revealed>*:nth-child(9) {
+    transition-delay: 0.61s;
+}
+
+[data-stagger].revealed>*:nth-child(10) {
+    transition-delay: 0.68s;
+}
+
+[data-stagger].revealed>*:nth-child(n+11) {
+    transition-delay: 0.72s;
+}
+
+[data-stagger].revealed>* {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* ----------------------------------------------------------
+   TEXT SHIMMER
+   Moving highlight across gradient text
+   ---------------------------------------------------------- */
+
+.text-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        background-position: 100% 50%;
+    }
+
+    50% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   ANIMATED GRADIENT BORDER
+   Rotating border glow for premium cards
+   ---------------------------------------------------------- */
+
+.glow-border {
+    position: relative;
+}
+
+.glow-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from var(--glow-angle, 0deg),
+            rgba(139, 92, 246, 0.5),
+            rgba(59, 130, 246, 0.15),
+            rgba(34, 211, 238, 0.4),
+            rgba(139, 92, 246, 0.15),
+            rgba(139, 92, 246, 0.5));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateBorder 5s linear infinite;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.glow-border:hover::before {
+    opacity: 1;
+}
+
+@property --glow-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rotateBorder {
+    to {
+        --glow-angle: 360deg;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   FLOATING PARTICLES (CSS-only — used on auth pages)
+   ---------------------------------------------------------- */
+
+.particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(167, 139, 250, 0.35);
+    box-shadow: 0 0 8px rgba(167, 139, 250, 0.25);
+    animation: particleFloat linear infinite;
+}
+
+.particle:nth-child(1) {
+    left: 8%;
+    width: 2px;
+    height: 2px;
+    animation-duration: 18s;
+    animation-delay: 0s;
+    top: 110%;
+}
+
+.particle:nth-child(2) {
+    left: 18%;
+    width: 4px;
+    height: 4px;
+    animation-duration: 22s;
+    animation-delay: -3s;
+    top: 110%;
+    background: rgba(59, 130, 246, 0.3);
+}
+
+.particle:nth-child(3) {
+    left: 32%;
+    width: 2px;
+    height: 2px;
+    animation-duration: 16s;
+    animation-delay: -6s;
+    top: 110%;
+}
+
+.particle:nth-child(4) {
+    left: 45%;
+    width: 3px;
+    height: 3px;
+    animation-duration: 20s;
+    animation-delay: -2s;
+    top: 110%;
+    background: rgba(34, 211, 238, 0.3);
+}
+
+.particle:nth-child(5) {
+    left: 55%;
+    width: 2px;
+    height: 2px;
+    animation-duration: 24s;
+    animation-delay: -8s;
+    top: 110%;
+}
+
+.particle:nth-child(6) {
+    left: 68%;
+    width: 4px;
+    height: 4px;
+    animation-duration: 19s;
+    animation-delay: -4s;
+    top: 110%;
+    background: rgba(139, 92, 246, 0.35);
+}
+
+.particle:nth-child(7) {
+    left: 78%;
+    width: 2px;
+    height: 2px;
+    animation-duration: 21s;
+    animation-delay: -10s;
+    top: 110%;
+}
+
+.particle:nth-child(8) {
+    left: 88%;
+    width: 3px;
+    height: 3px;
+    animation-duration: 17s;
+    animation-delay: -5s;
+    top: 110%;
+    background: rgba(59, 130, 246, 0.25);
+}
+
+.particle:nth-child(9) {
+    left: 25%;
+    width: 2px;
+    height: 2px;
+    animation-duration: 23s;
+    animation-delay: -7s;
+    top: 110%;
+}
+
+.particle:nth-child(10) {
+    left: 72%;
+    width: 3px;
+    height: 3px;
+    animation-duration: 15s;
+    animation-delay: -1s;
+    top: 110%;
+    background: rgba(34, 211, 238, 0.25);
+}
+
+.particle:nth-child(11) {
+    left: 40%;
+    width: 2px;
+    height: 2px;
+    animation-duration: 26s;
+    animation-delay: -12s;
+    top: 110%;
+}
+
+.particle:nth-child(12) {
+    left: 60%;
+    width: 4px;
+    height: 4px;
+    animation-duration: 20s;
+    animation-delay: -9s;
+    top: 110%;
+    background: rgba(167, 139, 250, 0.3);
+}
+
+@keyframes particleFloat {
+    from {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   SCORE RING ANIMATION
+   Animates conic-gradient from 0 → target value
+   ---------------------------------------------------------- */
+
+.score-ring-animated {
+    --score-display: 0;
+    animation: scoreReveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+}
+
+@keyframes scoreReveal {
+    from {
+        opacity: 0.7;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   COUNTER ANIMATION (used with JS)
+   ---------------------------------------------------------- */
+
+[data-counter] {
+    display: inline-block;
+}
+
+
+/* ----------------------------------------------------------
+   PULSE GLOW — Used on live dots, CTAs
+   ---------------------------------------------------------- */
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 8px currentColor;
+    }
+
+    50% {
+        box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    }
+}
+
+.pulse-glow {
+    animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+
+/* ----------------------------------------------------------
+   BUTTON PRESS EFFECT
+   ---------------------------------------------------------- */
+
+.btn-press {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-press:active {
+    transform: translateY(1px) scale(0.97) !important;
+    box-shadow: none !important;
+}
+
+
+/* ----------------------------------------------------------
+   INPUT FOCUS GLOW
+   ---------------------------------------------------------- */
+
+.input-glow:focus {
+    border-color: #7c3aed !important;
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.12),
+        0 0 20px rgba(139, 92, 246, 0.08),
+        0 8px 25px rgba(0, 0, 0, 0.12) !important;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+
+/* ----------------------------------------------------------
+   FORM SHAKE — Validation error feedback
+   ---------------------------------------------------------- */
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    50%,
+    90% {
+        transform: translateX(-6px);
+    }
+
+    30%,
+    70% {
+        transform: translateX(6px);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   CARD ENTRANCE — Used on auth pages
+   ---------------------------------------------------------- */
+
+.card-entrance {
+    animation: cardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   DRAG-OVER EFFECT — Upload area
+   ---------------------------------------------------------- */
+
+.upload-area-enhanced {
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.upload-area-enhanced.drag-over {
+    border-color: #8b5cf6 !important;
+    border-style: solid !important;
+    background: rgba(139, 92, 246, 0.08) !important;
+    transform: scale(1.02);
+    box-shadow:
+        0 0 0 4px rgba(139, 92, 246, 0.08),
+        0 25px 55px rgba(0, 0, 0, 0.2);
+}
+
+.upload-area-enhanced.drag-over .upload-icon {
+    animation: iconBounce 0.6s ease infinite;
+}
+
+@keyframes iconBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   FILE SELECTED CONFIRMATION
+   ---------------------------------------------------------- */
+
+.file-confirmed {
+    animation: confirmPulse 0.4s ease;
+}
+
+@keyframes confirmPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+        border-color: #22c55e;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   PROGRESS BAR ANIMATION
+   ---------------------------------------------------------- */
+
+.bar-animated span {
+    width: 0 !important;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bar-animated.revealed span {
+    width: var(--bar-target-width, 0) !important;
+}
+
+
+/* ----------------------------------------------------------
+   SELECTION BOUNCE — Company cards
+   ---------------------------------------------------------- */
+
+.selection-bounce {
+    animation: selectionBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes selectionBounce {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(0.96);
+    }
+
+    70% {
+        transform: scale(1.03);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   LOADING SPINNER — Buttons
+   ---------------------------------------------------------- */
+
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: 50%;
+    left: 50%;
+    margin: -11px 0 0 -11px;
+    border: 2.5px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ----------------------------------------------------------
+   TYPING CURSOR — Hero tagline
+   ---------------------------------------------------------- */
+
+.typing-cursor::after {
+    content: "|";
+    display: inline-block;
+    color: #a78bfa;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    font-weight: 300;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   HOVER LIFT — Universal card hover
+   ---------------------------------------------------------- */
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ----------------------------------------------------------
+   TOOLTIP FADE
+   ---------------------------------------------------------- */
+
+.tooltip-fade {
+    position: relative;
+}
+
+.tooltip-fade::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    color: #e2e8f0;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.25s ease;
+}
+
+.tooltip-fade:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}

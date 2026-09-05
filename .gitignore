@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Uploaded resumes / user data
+uploads/*
+!uploads/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs / local databases
+*.log
+*.sqlite3
+*.db
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/

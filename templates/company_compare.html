@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Company Match | CareerAI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            color: #ffffff;
+
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(92, 103, 255, 0.18),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(122, 92, 255, 0.12),
+                    transparent 28%
+                ),
+                #080d1c;
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 55px 0 80px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            margin-bottom: 38px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-bottom: 14px;
+
+            color: #8793ff;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #7885ff;
+
+            box-shadow:
+                0 0 14px rgba(120, 133, 255, 0.8);
+        }
+
+        .header h1 {
+            margin: 0;
+
+            font-size: clamp(32px, 4vw, 48px);
+
+            line-height: 1.08;
+
+            font-weight: 850;
+
+            letter-spacing: -1.8px;
+        }
+
+        .header p {
+            max-width: 720px;
+
+            margin: 15px 0 0;
+
+            color: #929db8;
+
+            font-size: 16px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           COMPANY GRID
+        ===================================================== */
+
+        .company-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 24px;
+
+            width: 100%;
+        }
+
+
+        /* =====================================================
+           COMPANY OPTION
+        ===================================================== */
+
+        .company-option {
+            min-width: 0;
+        }
+
+        .company-option input {
+            position: absolute;
+
+            width: 1px;
+            height: 1px;
+
+            opacity: 0;
+
+            pointer-events: none;
+        }
+
+
+        /* =====================================================
+           COMPANY CARD
+        ===================================================== */
+
+        .company-card {
+            position: relative;
+
+            display: flex;
+            flex-direction: column;
+
+            width: 100%;
+            min-height: 420px;
+
+            padding: 28px;
+
+            cursor: pointer;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(115, 130, 175, 0.20);
+
+            border-radius: 26px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(20, 30, 55, 0.96),
+                    rgba(9, 17, 34, 0.98)
+                );
+
+            box-shadow:
+                0 18px 50px rgba(0, 0, 0, 0.20);
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+
+        .company-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: -80px;
+            right: -80px;
+
+            width: 180px;
+            height: 180px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(104, 117, 255, 0.14),
+                    transparent 68%
+                );
+
+            pointer-events: none;
+        }
+
+
+        .company-card:hover {
+            transform: translateY(-7px);
+
+            border-color:
+                rgba(112, 127, 255, 0.70);
+
+            box-shadow:
+                0 25px 65px rgba(0, 0, 0, 0.36),
+                0 0 0 1px rgba(112, 127, 255, 0.08);
+        }
+
+
+        /* =====================================================
+           SELECTED CARD
+        ===================================================== */
+
+        .company-option input:checked + .company-card {
+            border-color: #7885ff;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(65, 77, 175, 0.42),
+                    rgba(10, 20, 42, 0.98)
+                );
+
+            box-shadow:
+                0 0 0 2px rgba(120, 133, 255, 0.12),
+                0 25px 70px rgba(60, 72, 180, 0.20);
+        }
+
+
+        /* =====================================================
+           TOP ROW
+        ===================================================== */
+
+        .card-top {
+            display: flex;
+
+            align-items: flex-start;
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+
+        /* =====================================================
+           COMPANY LOGO
+        ===================================================== */
+
+        .company-logo {
+            width: 68px;
+            height: 68px;
+
+            flex: 0 0 68px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 19px;
+
+            border: 1px solid rgba(255, 255, 255, 0.09);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #283961,
+                    #172440
+                );
+
+            color: #ffffff;
+
+            font-size: 24px;
+            font-weight: 850;
+
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+
+        /* =====================================================
+           CHECK INDICATOR
+        ===================================================== */
+
+        .check-indicator {
+            width: 25px;
+            height: 25px;
+
+            flex: 0 0 25px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            border: 1px solid #465370;
+
+            color: transparent;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            transition:
+                0.2s ease;
+        }
+
+        .company-option input:checked + .company-card
+        .check-indicator {
+
+            border-color: #8792ff;
+
+            background: #6574ff;
+
+            color: #ffffff;
+
+            box-shadow:
+                0 0 18px rgba(101, 116, 255, 0.35);
+        }
+
+
+        /* =====================================================
+           COMPANY INFO
+        ===================================================== */
+
+        .company-name {
+            margin: 23px 0 0;
+
+            font-size: 26px;
+
+            line-height: 1.15;
+
+            font-weight: 850;
+
+            letter-spacing: -0.5px;
+        }
+
+        .company-role {
+            margin-top: 9px;
+
+            color: #8995ae;
+
+            font-size: 13px;
+
+            line-height: 1.55;
+        }
+
+
+        /* =====================================================
+           DIVIDER
+        ===================================================== */
+
+        .divider {
+            width: 100%;
+            height: 1px;
+
+            margin: 24px 0;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+
+        /* =====================================================
+           REQUIREMENTS
+        ===================================================== */
+
+        .requirements-title {
+            margin-bottom: 13px;
+
+            color: #77849e;
+
+            font-size: 10px;
+
+            font-weight: 850;
+
+            letter-spacing: 1.3px;
+
+            text-transform: uppercase;
+        }
+
+        .skills {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+        }
+
+        .skill {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 7px 11px;
+
+            border-radius: 999px;
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            color: #aeb8ce;
+
+            font-size: 11px;
+
+            line-height: 1.2;
+        }
+
+
+        /* =====================================================
+           SELECT FOOTER
+        ===================================================== */
+
+        .select-text {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: auto;
+
+            padding-top: 25px;
+
+            color: #8e9ab4;
+
+            font-size: 13px;
+
+            font-weight: 650;
+        }
+
+        .select-icon {
+            width: 19px;
+            height: 19px;
+
+            flex: 0 0 19px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            border: 1px solid #485572;
+
+            color: transparent;
+
+            font-size: 11px;
+
+            transition:
+                0.2s ease;
+        }
+
+        .company-option input:checked + .company-card
+        .select-icon {
+
+            border-color: #8792ff;
+
+            background: #6876ff;
+
+            color: white;
+        }
+
+
+        /* =====================================================
+           BUTTON AREA
+        ===================================================== */
+
+        .button-area {
+            display: flex;
+
+            justify-content: center;
+
+            margin-top: 38px;
+        }
+
+        .analyze-btn {
+            width: 620px;
+            max-width: 100%;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 10px;
+
+            padding: 17px 25px;
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #5865f2,
+                    #7565ff
+                );
+
+            color: #ffffff;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 15px 40px rgba(88, 101, 242, 0.25);
+
+            transition:
+                transform 0.2s ease,
+                filter 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-3px);
+
+            filter: brightness(1.08);
+
+            box-shadow:
+                0 20px 50px rgba(88, 101, 242, 0.32);
+        }
+
+        .analyze-btn:active {
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           SMALL NOTE
+        ===================================================== */
+
+        .helper-text {
+            margin-top: 14px;
+
+            text-align: center;
+
+            color: #69758e;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1050px) {
+
+            .company-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+        }
+
+
+        @media (max-width: 680px) {
+
+            .page {
+                padding-top: 35px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .header h1 {
+                font-size: 34px;
+            }
+
+            .company-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .company-card {
+                min-height: 390px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <main class="page">
+
+        <div class="container">
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+
+            <header class="header">
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    AI Career Intelligence
+                </div>
+
+                <h1>
+                    🎯 Choose Companies To Match
+                </h1>
+
+                <p>
+                    Select one, two, or all three companies.
+                    CareerAI will compare your analyzed resume
+                    against the selected company requirements.
+                </p>
+
+            </header>
+
+
+            <!-- =================================================
+                 COMPANY FORM
+            ================================================== -->
+
+            <form
+                method="POST"
+                action="{{ url_for('dashboard.company_compare') }}"
+            >
+
+                <div class="company-grid">
+
+                    {% for company in companies %}
+
+                    <div class="company-option">
+
+                        <!-- REAL CHECKBOX -->
+                        <input
+                            type="checkbox"
+                            name="companies"
+                            value="{{ company.name }}"
+                            id="company{{ loop.index }}"
+                        >
+
+
+                        <!-- COMPANY CARD -->
+
+                        <label
+                            class="company-card"
+                            for="company{{ loop.index }}"
+                        >
+
+                            <div class="card-top">
+
+                                <!-- LOGO -->
+
+                                <div class="company-logo">
+
+                                    {% if company.name == "Google" %}
+                                        G
+                                    {% elif company.name == "TCS" %}
+                                        TCS
+                                    {% else %}
+                                        I
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- CHECK -->
+
+                                <div class="check-indicator">
+                                    ✓
+                                </div>
+
+                            </div>
+
+
+                            <!-- COMPANY NAME -->
+
+                            <h2 class="company-name">
+                                {{ company.name }}
+                            </h2>
+
+
+                            <!-- ROLE -->
+
+                            <div class="company-role">
+                                {{ company.role }}
+                            </div>
+
+
+                            <div class="divider"></div>
+
+
+                            <!-- REQUIREMENTS -->
+
+                            <div class="requirements-title">
+                                Key Technical Requirements
+                            </div>
+
+
+                            <div class="skills">
+
+                                {% for skill in company.skills[:6] %}
+
+                                <span class="skill">
+                                    {{ skill }}
+                                </span>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- SELECT -->
+
+                            <div class="select-text">
+
+                                <span class="select-icon">
+                                    ✓
+                                </span>
+
+                                Select {{ company.name }}
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- =================================================
+                     ANALYZE BUTTON
+                ================================================== -->
+
+                <div class="button-area">
+
+                    <button
+                        type="submit"
+                        class="analyze-btn"
+                    >
+
+                        <span>🔍</span>
+
+                        Analyze My Resume Against
+                        Selected Companies
+
+                    </button>
+
+                </div>
+
+                <div class="helper-text">
+                    Your selected companies will be analyzed
+                    using your latest uploaded resume.
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

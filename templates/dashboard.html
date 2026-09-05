@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Career Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050816;
+            --panel: #0b1124;
+            --panel2: #0f1730;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f7f9ff;
+            --muted: #8994b3;
+            --blue: #5b7cff;
+            --cyan: #20d9ff;
+            --purple: #9b5cff;
+            --green: #35e6a5;
+            --red: #ff5f7a;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(91, 124, 255, .18), transparent 28%),
+                radial-gradient(circle at 90% 20%, rgba(155, 92, 255, .14), transparent 25%),
+                radial-gradient(circle at 50% 100%, rgba(32, 217, 255, .08), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, Segoe UI, Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 76px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(5, 8, 22, .78);
+            backdrop-filter: blur(18px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            box-shadow: 0 0 30px rgba(91, 124, 255, .35);
+            font-size: 21px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+            color: var(--muted);
+            border-radius: 10px;
+            transition: .25s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, .06);
+            color: white;
+        }
+
+        .logout {
+            border: 1px solid rgba(255, 95, 122, .3);
+            color: #ff91a4;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: min(1400px, 92%);
+            margin: auto;
+        }
+
+        .hero {
+            padding: 58px 0 35px;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-left {
+            max-width: 760px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 13px;
+            border-radius: 50px;
+            background: rgba(91, 124, 255, .1);
+            border: 1px solid rgba(91, 124, 255, .22);
+            color: #aebcff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 62px);
+            line-height: 1.02;
+            letter-spacing: -2.5px;
+            margin-bottom: 18px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #fff, #8da2ff, #55e4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            border-radius: 13px;
+            padding: 13px 20px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: .25s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            color: white;
+            background: linear-gradient(135deg, #5575ff, #7855ed);
+            box-shadow: 0 12px 30px rgba(91, 124, 255, .22);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 40px rgba(91, 124, 255, .35);
+        }
+
+        .btn-secondary {
+            color: white;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .045);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, .09);
+            transform: translateY(-2px);
+        }
+
+        /* ================= AI ORB ================= */
+
+        .ai-orb {
+            width: 190px;
+            height: 190px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            position: relative;
+            display: grid;
+            place-items: center;
+            background:
+                radial-gradient(circle at center,
+                    rgba(91, 124, 255, .35) 0 25%,
+                    rgba(91, 124, 255, .12) 26% 45%,
+                    transparent 46%);
+            border: 1px solid rgba(120, 140, 255, .2);
+            box-shadow:
+                0 0 70px rgba(91, 124, 255, .18),
+                inset 0 0 50px rgba(91, 124, 255, .08);
+        }
+
+        .ai-orb::before,
+        .ai-orb::after {
+            content: "";
+            position: absolute;
+            inset: 15px;
+            border: 1px solid rgba(91, 124, 255, .25);
+            border-radius: 50%;
+            animation: rotate 8s linear infinite;
+        }
+
+        .ai-orb::after {
+            inset: 35px;
+            border-color: rgba(32, 217, 255, .22);
+            animation-direction: reverse;
+            animation-duration: 5s;
+        }
+
+        @keyframes rotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .orb-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .orb-content strong {
+            display: block;
+            font-size: 30px;
+        }
+
+        .orb-content span {
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ================= STAT CARDS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 17px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg,
+                    rgba(15, 23, 48, .96),
+                    rgba(9, 15, 32, .9));
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 23px;
+            position: relative;
+            overflow: hidden;
+            transition: .3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(91, 124, 255, .3);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .25);
+        }
+
+        .stat-card::after {
+            content: "";
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            right: -40px;
+            top: -40px;
+            background: var(--blue);
+            opacity: .06;
+            filter: blur(20px);
+            border-radius: 50%;
+        }
+
+        .stat-icon {
+            width: 43px;
+            height: 43px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: rgba(91, 124, 255, .11);
+            margin-bottom: 18px;
+            font-size: 20px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 29px;
+            font-weight: 800;
+            margin-top: 5px;
+        }
+
+        .stat-desc {
+            color: #66718f;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            margin-top: 34px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            margin-bottom: 17px;
+            gap: 15px;
+        }
+
+        .section-heading h2 {
+            font-size: 23px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        /* ================= ANALYTICS ================= */
+
+        .analytics {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 18px;
+        }
+
+        .panel {
+            background: rgba(11, 17, 36, .86);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 25px;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 750;
+            margin-bottom: 20px;
+        }
+
+        .score-layout {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .score-ring {
+            width: 155px;
+            height: 155px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+
+            background: conic-gradient(var(--cyan) {
+                        {
+                        resume.ats_score if resume and resume.ats_score else 0
+                    }
+                }
+
+                %,
+                #1b243a 0);
+            position: relative;
+            box-shadow: 0 0 35px rgba(32, 217, 255, .08);
+        }
+
+        .score-ring::before {
+            content: "";
+            position: absolute;
+            inset: 11px;
+            background: var(--panel);
+            border-radius: 50%;
+        }
+
+        .score-number {
+            position: relative;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .score-number strong {
+            font-size: 38px;
+        }
+
+        .score-number span {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .score-info h3 {
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+
+        .score-info p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .mini-progress {
+            height: 7px;
+            border-radius: 50px;
+            background: #1b243a;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .mini-progress span {
+            display: block;
+            height: 100%;
+
+            width: {
+                    {
+                    resume.ats_score if resume and resume.ats_score else 0
+                }
+            }
+
+            %;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            border-radius: inherit;
+        }
+
+        /* ================= QUICK ACTIONS ================= */
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action-card {
+            padding: 17px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, .025);
+            border: 1px solid var(--border);
+            transition: .25s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, .05);
+            border-color: rgba(91, 124, 255, .3);
+        }
+
+        .action-icon {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .action-card h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .action-card p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin-bottom: 13px;
+        }
+
+        .action-link {
+            color: #91a6ff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ================= COMPANY MATCH ================= */
+
+        .company-box {
+            position: relative;
+            background:
+                linear-gradient(135deg,
+                    rgba(91, 124, 255, .08),
+                    rgba(155, 92, 255, .05),
+                    rgba(32, 217, 255, .04));
+            border: 1px solid rgba(91, 124, 255, .18);
+            border-radius: 24px;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .company-box::before {
+            content: "AI";
+            position: absolute;
+            right: 25px;
+            top: -35px;
+            font-size: 150px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, .025);
+            pointer-events: none;
+        }
+
+        .company-head {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 23px;
+        }
+
+        .company-head h2 {
+            font-size: 25px;
+        }
+
+        .company-head p {
+            color: var(--muted);
+            margin-top: 7px;
+            font-size: 13px;
+        }
+
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .company-option {
+            position: relative;
+        }
+
+        .company-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .company-card {
+            display: block;
+            min-height: 190px;
+            padding: 21px;
+            border-radius: 18px;
+            background: rgba(7, 12, 27, .8);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .company-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(91, 124, 255, .4);
+        }
+
+        .company-option input:checked+.company-card {
+            border-color: var(--blue);
+            background: rgba(91, 124, 255, .09);
+            box-shadow:
+                0 0 0 1px rgba(91, 124, 255, .12),
+                0 15px 40px rgba(0, 0, 0, .2);
+        }
+
+        .company-logo {
+            width: 47px;
+            height: 47px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: #19223a;
+            font-weight: 900;
+            margin-bottom: 17px;
+        }
+
+        .company-card h3 {
+            font-size: 17px;
+        }
+
+        .company-role {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        .company-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 14px;
+        }
+
+        .skill {
+            padding: 5px 8px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, .045);
+            color: #aeb9d5;
+            font-size: 9px;
+            border: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .compare-footer {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .compare-hint {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* ================= RESUME ================= */
+
+        .resume-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .resume-card {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .025);
+            padding: 23px;
+            border-radius: 18px;
+        }
+
+        .resume-card h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .resume-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 15px;
+        }
+
+        .skill-pill {
+            padding: 7px 11px;
+            border-radius: 50px;
+            color: #aebcff;
+            background: rgba(91, 124, 255, .09);
+            border: 1px solid rgba(91, 124, 255, .18);
+            font-size: 11px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            padding: 45px 0 35px;
+            text-align: center;
+            color: #56617e;
+            font-size: 11px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 1000px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .analytics {
+                grid-template-columns: 1fr;
+            }
+
+            .company-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-orb {
+                width: 140px;
+                height: 140px;
+            }
+        }
+
+        @media(max-width: 700px) {
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .nav-right .nav-link:not(.logout) {
+                display: none;
+            }
+
+            .hero {
+                padding-top: 35px;
+            }
+
+            .ai-orb {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .score-layout {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .company-box {
+                padding: 20px;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body class="page-enter">
+
+
+    <!-- =========================================================
+    NAVBAR
+========================================================= -->
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('dashboard.dashboard') }}" class="brand">
+
+            <span class="brand-icon">🤖</span>
+
+            <span>AI Career<span style="color:#7d94ff;">Engine</span></span>
+
+        </a>
+
+
+        <div class="nav-right">
+
+            <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link">
+
+                Dashboard
+
+            </a>
+
+            <a href="{{ url_for('dashboard.upload_resume') }}" class="nav-link">
+
+                Resume
+
+            </a>
+
+        <a href="https://pminternship.mca.gov.in/" target="_blank" class="nav-link">
+
+    Internships
+
+</a>
+            <a href="{{ url_for('dashboard.company_compare') }}" class="compare-company-btn">
+
+                <span class="compare-icon">🏢</span>
+
+                <span class="compare-content">
+                    <strong>Compare My Resume</strong>
+                    <small>Google • TCS • Infosys</small>
+                </span>
+
+                <span class="compare-arrow">→</span>
+
+            </a>
+
+            <a href="{{ url_for('auth.logout') }}" class="nav-link logout">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <main class="container">
+
+
+        <!-- =========================================================
+     HERO
+========================================================= -->
+
+        <section class="hero">
+
+            <div class="hero-left">
+
+                <div class="eyebrow">
+                    ✦ AI-POWERED CAREER INTELLIGENCE
+                </div>
+
+                <h1>
+                    Welcome back,
+                    <span class="gradient-text">
+                        {{ user.fullname if user else "Candidate" }}
+                    </span>
+                </h1>
+
+                <p>
+                    Your intelligent career workspace is ready.
+                    Analyze your resume, identify skill gaps, compare
+                    your profile with top companies and discover
+                    internships aligned with your skills.
+                </p>
+
+
+                <div class="hero-actions">
+
+                    <a href="{{ url_for('dashboard.upload_resume') }}" class="btn btn-primary">
+
+                        ✨ Analyze Resume
+
+                    </a>
+
+                    <a href="https://pminternship.mca.gov.in/" target="_blank" class="btn btn-secondary">
+
+    🚀 Explore Internships
+
+</a>
+
+                </div>
+
+            </div>
+
+
+            <div class="ai-orb">
+
+                <div class="orb-content">
+
+                    <strong>AI</strong>
+
+                    <span>Career Engine</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+     STATISTICS
+========================================================= -->
+
+        <section class="stats" data-stagger>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">🎯</div>
+
+                <div class="stat-label">
+                    ATS Score
+                </div>
+
+                <div class="stat-value">
+                    {{ resume.ats_score if resume and resume.ats_score is not none else 0 }}%
+                </div>
+
+                <div class="stat-desc">
+                    Latest resume compatibility
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">📄</div>
+
+                <div class="stat-label">
+                    Resume Status
+                </div>
+
+                <div class="stat-value">
+
+                    {% if resume %}
+                    Ready
+                    {% else %}
+                    Pending
+                    {% endif %}
+
+                </div>
+
+                <div class="stat-desc">
+
+                    {% if resume %}
+                    Resume successfully analyzed
+                    {% else %}
+                    Upload your resume to begin
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">⚡</div>
+
+                <div class="stat-label">
+                    Detected Skills
+                </div>
+
+                <div class="stat-value">
+
+                    {% if resume and resume.extracted_skills %}
+
+                    {{ resume.extracted_skills.split(',')|length }}
+
+                    {% else %}
+
+                    0
+
+                    {% endif %}
+
+                </div>
+
+                <div class="stat-desc">
+                    Technical skills detected
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">🚀</div>
+
+                <div class="stat-label">
+                    Career Readiness
+                </div>
+
+                <div class="stat-value">
+
+                    {% if resume and resume.ats_score is not none %}
+
+                    {% if resume.ats_score >= 80 %}
+                    Excellent
+                    {% elif resume.ats_score >= 60 %}
+                    Good
+                    {% elif resume.ats_score >= 40 %}
+                    Growing
+                    {% else %}
+                    Beginner
+                    {% endif %}
+
+                    {% else %}
+
+                    Start
+
+                    {% endif %}
+
+                </div>
+
+                <div class="stat-desc">
+                    Based on resume analysis
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+     ANALYTICS
+========================================================= -->
+
+        <section class="section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>📊 Career Intelligence</h2>
+
+                    <p>
+                        Understand your current resume strength.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics">
+
+
+                <div class="panel">
+
+                    <div class="panel-title">
+                        Resume ATS Performance
+                    </div>
+
+
+                    <div class="score-layout">
+
+                        <div class="score-ring score-ring-animated"
+                            data-score="{{ resume.ats_score if resume and resume.ats_score is not none else 0 }}"
+                            style="--ring-color: var(--cyan); --ring-bg: #1b243a;">
+
+                            <div class="score-number">
+
+                                <strong>
+                                    {{ resume.ats_score if resume and resume.ats_score is not none else 0 }}
+                                </strong>
+
+                                <span>ATS Score</span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="score-info">
+
+                            <h3>
+
+                                {% if resume and resume.ats_score is not none %}
+
+                                {% if resume.ats_score >= 80 %}
+                                Excellent Resume
+                                {% elif resume.ats_score >= 60 %}
+                                Good Foundation
+                                {% elif resume.ats_score >= 40 %}
+                                Needs Improvement
+                                {% else %}
+                                Needs Optimization
+                                {% endif %}
+
+                                {% else %}
+
+                                No Resume Analyzed
+
+                                {% endif %}
+
+                            </h3>
+
+                            <p>
+                                Your ATS score represents how well your
+                                resume structure, skills and content are
+                                optimized for automated screening.
+                            </p>
+
+                            <div class="mini-progress">
+
+                                <span></span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="panel">
+
+                    <div class="panel-title">
+                        ⚡ Quick Career Actions
+                    </div>
+
+
+                    <div class="actions-grid" data-stagger>
+
+
+                        <a href="{{ url_for('dashboard.upload_resume') }}" class="action-card hover-lift">
+
+                            <div class="action-icon">📄</div>
+
+                            <h3>Analyze Resume</h3>
+
+                            <p>
+                                Check ATS score, skills and missing sections.
+                            </p>
+
+                            <span class="action-link">
+                                Start Analysis →
+                            </span>
+
+                        </a>
+
+
+                       <a href="https://pminternship.mca.gov.in/" target="_blank" class="action-card hover-lift">
+                            <div class="action-icon">💼</div>
+
+                            <h3>Find Internships</h3>
+
+                            <p>
+                                Discover internships based on your skills.
+                            </p>
+
+                            <span class="action-link">
+                                Explore →
+                            </span>
+
+                        </a>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+     COMPANY MATCH SYSTEM
+========================================================= -->
+
+        <section class="section" data-reveal>
+
+            <div class="company-box">
+
+
+                <div class="company-head">
+
+                    <h2>
+                        🏢 Company Resume Match
+                    </h2>
+
+                    <p>
+                        Select one or multiple companies and compare your
+                        latest analyzed resume against their entry-level
+                        technical requirements.
+                    </p>
+
+                </div>
+
+
+                <form method="POST" action="{{ url_for('dashboard.company_compare') }}">
+
+
+                    <div class="company-grid" data-stagger>
+
+
+                        <!-- GOOGLE -->
+
+                        <div class="company-option">
+
+                            <input type="checkbox" name="companies" value="Google" id="google">
+
+                            <label for="google" class="company-card">
+
+                                <div class="company-logo">
+                                    G
+                                </div>
+
+                                <h3>
+                                    Google
+                                </h3>
+
+                                <div class="company-role">
+                                    University Graduate /
+                                    Entry-Level Software Roles
+                                </div>
+
+
+                                <div class="company-skills">
+
+                                    <span class="skill">Python</span>
+                                    <span class="skill">Java</span>
+                                    <span class="skill">C++</span>
+                                    <span class="skill">SQL</span>
+                                    <span class="skill">DSA</span>
+                                    <span class="skill">Algorithms</span>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <!-- TCS -->
+
+                        <div class="company-option">
+
+                            <input type="checkbox" name="companies" value="TCS" id="tcs">
+
+                            <label for="tcs" class="company-card">
+
+                                <div class="company-logo">
+                                    TCS
+                                </div>
+
+                                <h3>
+                                    Tata Consultancy Services
+                                </h3>
+
+                                <div class="company-role">
+                                    Ninja / Digital / Prime
+                                </div>
+
+
+                                <div class="company-skills">
+
+                                    <span class="skill">Python</span>
+                                    <span class="skill">Java</span>
+                                    <span class="skill">OOP</span>
+                                    <span class="skill">SQL</span>
+                                    <span class="skill">DBMS</span>
+                                    <span class="skill">DSA</span>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <!-- INFOSYS -->
+
+                        <div class="company-option">
+
+                            <input type="checkbox" name="companies" value="Infosys" id="infosys">
+
+                            <label for="infosys" class="company-card">
+
+                                <div class="company-logo">
+                                    I
+                                </div>
+
+                                <h3>
+                                    Infosys
+                                </h3>
+
+                                <div class="company-role">
+                                    Systems Engineer /
+                                    Specialist Programmer
+                                </div>
+
+
+                                <div class="company-skills">
+
+                                    <span class="skill">Python</span>
+                                    <span class="skill">Java</span>
+                                    <span class="skill">OOP</span>
+                                    <span class="skill">SQL</span>
+                                    <span class="skill">REST API</span>
+                                    <span class="skill">DBMS</span>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="compare-footer">
+
+                        <div class="compare-hint">
+                            💡 Select one or more companies to calculate
+                            your resume-to-job requirement match.
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary">
+
+                            🔍 Compare Selected Companies
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+     CURRENT RESUME
+========================================================= -->
+
+        <section class="section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>📄 Resume Intelligence</h2>
+
+                    <p>
+                        Your latest resume profile and detected technical skills.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="resume-panel">
+
+
+                <div class="resume-card">
+
+                    <h3>
+                        Current Resume
+                    </h3>
+
+
+                    {% if resume %}
+
+                    <p>
+                        <strong style="color:white;">
+                            {{ resume.filename }}
+                        </strong>
+                    </p>
+
+                    <p>
+                        Your resume has been successfully processed
+                        by the resume analysis engine.
+                    </p>
+
+                    <a href="{{ url_for('dashboard.upload_resume') }}" class="btn btn-secondary"
+                        style="margin-top:14px;">
+                        🔄 Analyze Another Resume
+                    </a>
+
+                    {% else %}
+
+                    <p>
+                        You haven't analyzed a resume yet.
+                        Upload your PDF or DOCX resume to unlock
+                        ATS analysis and company matching.
+                    </p>
+
+                    <a href="{{ url_for('dashboard.upload_resume') }}" class="btn btn-primary" style="margin-top:14px;">
+                        📤 Upload Resume
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+
+
+                <div class="resume-card">
+
+                    <h3>
+                        🧠 Detected Technical Skills
+                    </h3>
+
+
+                    {% if resume and resume.extracted_skills %}
+
+                    <div class="skill-list" data-stagger>
+
+                        {% for skill in resume.extracted_skills.split(',') %}
+
+                        {% if skill.strip() %}
+
+                        <span class="skill-pill">
+                            {{ skill.strip() }}
+                        </span>
+
+                        {% endif %}
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% else %}
+
+                    <p>
+                        No skills detected yet.
+                        Analyze your resume to generate your
+                        technical skill profile.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <footer>
+
+            <div>
+                🤖 AI Career Engine
+            </div>
+
+            <div style="margin-top:7px;">
+                Resume Intelligence • ATS Analysis • Company Matching • Internship Discovery
+            </div>
+
+        </footer>
+
+
+    </main>
+
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

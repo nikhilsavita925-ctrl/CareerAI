@@ -1,0 +1,3610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050816">
+    <meta name="description" content="CareerAI — AI-powered resume intelligence, ATS scoring and internship matching.">
+    <title>CareerAI — AI Internship Engine</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+
+    <style>
+        /* =========================================================
+           CAREERAI — INDEX PAGE
+           High-end dark SaaS / AI career intelligence interface
+           Everything is intentionally self-contained in this file.
+           ========================================================= */
+
+        :root {
+            --bg: #040611;
+            --bg-2: #070a18;
+            --surface: #0a0f21;
+            --surface-2: #0d142a;
+            --surface-3: #111a34;
+            --line: rgba(148, 163, 184, 0.13);
+            --line-bright: rgba(167, 139, 250, 0.32);
+            --text: #f8fafc;
+            --text-2: #dbe4f4;
+            --muted: #8c99b4;
+            --muted-2: #63708b;
+            --purple: #8b5cf6;
+            --purple-2: #a78bfa;
+            --blue: #3b82f6;
+            --cyan: #22d3ee;
+            --green: #22c55e;
+            --orange: #fb923c;
+            --pink: #f472b6;
+            --shadow: 0 30px 100px rgba(0, 0, 0, 0.42);
+            --shadow-soft: 0 18px 60px rgba(0, 0, 0, 0.28);
+            --radius-xl: 30px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+            --container: 1240px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--bg);
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 12% 4%, rgba(124, 58, 237, 0.16), transparent 26%),
+                radial-gradient(circle at 88% 9%, rgba(37, 99, 235, 0.13), transparent 25%),
+                radial-gradient(circle at 52% 44%, rgba(14, 165, 233, 0.045), transparent 30%),
+                linear-gradient(180deg, #040611 0%, #060916 48%, #040611 100%);
+            font-family: "DM Sans", sans-serif;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+            opacity: 0.23;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+            background-size: 54px 54px;
+            mask-image: linear-gradient(to bottom, black, transparent 72%);
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            top: 18%;
+            left: 42%;
+            z-index: -2;
+            pointer-events: none;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.055);
+            filter: blur(110px);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        ::selection {
+            color: #fff;
+            background: rgba(139, 92, 246, 0.5);
+        }
+
+        ::-webkit-scrollbar {
+            width: 9px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #040611;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #202a45;
+            border-radius: 30px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334268;
+        }
+
+        .container {
+            width: min(calc(100% - 48px), var(--container));
+            margin: 0 auto;
+        }
+
+        .section {
+            position: relative;
+            padding: 112px 0;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 30px;
+            padding: 6px 11px;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 999px;
+            color: #c4b5fd;
+            background: rgba(124, 58, 237, 0.08);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #a78bfa;
+            box-shadow: 0 0 14px rgba(167, 139, 250, 0.9);
+        }
+
+        .gradient-text {
+            background: linear-gradient(100deg, #ffffff 8%, #c4b5fd 42%, #60a5fa 78%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .section-heading {
+            max-width: 780px;
+        }
+
+        .section-heading h2 {
+            margin-top: 18px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1.02;
+            letter-spacing: -0.045em;
+        }
+
+        .section-heading p {
+            max-width: 680px;
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+
+        .site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: 0.35s ease;
+        }
+
+        .site-nav.scrolled {
+            padding: 10px 0;
+            background: rgba(4, 6, 17, 0.72);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.09);
+        }
+
+        .nav-shell {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            min-height: 64px;
+            padding: 0 10px 0 18px;
+            border: 1px solid rgba(148, 163, 184, 0.11);
+            border-radius: 20px;
+            background: rgba(7, 11, 26, 0.66);
+            box-shadow: 0 14px 45px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(20px);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            flex-shrink: 0;
+        }
+
+        .brand-mark {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #8b5cf6, #2563eb);
+            box-shadow:
+                0 8px 26px rgba(124, 58, 237, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand-mark::after {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            border-radius: 11px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .brand-copy {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .brand-name {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-tag {
+            margin-top: 5px;
+            color: #71809d;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 10px 13px;
+            border-radius: 10px;
+            color: #9ba8c1;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.25s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #fff;
+            background: rgba(139, 92, 246, 0.09);
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 3px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #a78bfa;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px #a78bfa;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-btn {
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.025);
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .theme-btn:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(139, 92, 246, 0.08);
+            transform: rotate(8deg);
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 15px;
+            border: 1px solid rgba(167, 139, 250, 0.32);
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7c3aed, #2563eb);
+            box-shadow: 0 10px 26px rgba(79, 70, 229, 0.22);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.35);
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           HERO
+           ========================================================= */
+
+        .hero {
+            position: relative;
+            min-height: 890px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            padding: 150px 0 105px;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 760px;
+            height: 760px;
+            right: -270px;
+            top: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(139, 92, 246, 0.07);
+            box-shadow:
+                0 0 0 100px rgba(139, 92, 246, 0.018),
+                0 0 0 200px rgba(139, 92, 246, 0.012);
+        }
+
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+        }
+
+        .orb-one {
+            width: 340px;
+            height: 340px;
+            top: 150px;
+            left: -180px;
+            background: rgba(124, 58, 237, 0.08);
+            filter: blur(80px);
+        }
+
+        .orb-two {
+            width: 260px;
+            height: 260px;
+            top: 420px;
+            right: 8%;
+            background: rgba(37, 99, 235, 0.08);
+            filter: blur(70px);
+        }
+
+        .hero-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 0.96fr 1.04fr;
+            align-items: center;
+            gap: 78px;
+        }
+
+        .hero-copy {
+            animation: heroIn 0.8s ease both;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border: 1px solid rgba(56, 189, 248, 0.16);
+            border-radius: 999px;
+            color: #a5b4fc;
+            background: rgba(30, 41, 59, 0.42);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 13px rgba(52, 211, 153, 0.9);
+            animation: pulse 2s infinite;
+        }
+
+        .hero-title {
+            max-width: 730px;
+            margin-top: 25px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(52px, 6.5vw, 86px);
+            line-height: 0.98;
+            letter-spacing: -0.06em;
+        }
+
+        .hero-title .line-two {
+            display: block;
+        }
+
+        .hero-title .line-three {
+            display: block;
+        }
+
+        .hero-description {
+            max-width: 630px;
+            margin-top: 28px;
+            color: #9aa8c2;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 34px;
+        }
+
+        .primary-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            min-height: 54px;
+            padding: 0 21px;
+            overflow: hidden;
+            border: 1px solid rgba(167, 139, 250, 0.35);
+            border-radius: 15px;
+            color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #2563eb);
+            box-shadow: 0 16px 40px rgba(79, 70, 229, 0.27);
+            font-size: 13px;
+            font-weight: 700;
+            transition: 0.3s ease;
+        }
+
+        .primary-btn::before {
+            content: "";
+            position: absolute;
+            inset: -80% -40%;
+            background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.22), transparent 65%);
+            transform: translateX(-100%) rotate(10deg);
+            transition: 0.7s ease;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 23px 55px rgba(79, 70, 229, 0.38);
+        }
+
+        .primary-btn:hover::before {
+            transform: translateX(100%) rotate(10deg);
+        }
+
+        .primary-btn span,
+        .secondary-btn span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 54px;
+            padding: 0 20px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 15px;
+            color: #d4dced;
+            background: rgba(255, 255, 255, 0.025);
+            font-size: 13px;
+            font-weight: 700;
+            transition: 0.3s ease;
+        }
+
+        .secondary-btn:hover {
+            transform: translateY(-3px);
+            border-color: rgba(139, 92, 246, 0.32);
+            background: rgba(139, 92, 246, 0.07);
+            color: #fff;
+        }
+
+        .hero-proof {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 28px;
+            color: #6f7d98;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .proof-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .proof-check {
+            display: grid;
+            place-items: center;
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 6px;
+            color: #4ade80;
+            background: rgba(34, 197, 94, 0.07);
+            font-size: 10px;
+        }
+
+        /* =========================================================
+           AI COMMAND PANEL
+           ========================================================= */
+
+        .hero-visual {
+            position: relative;
+            animation: visualIn 0.9s 0.08s ease both;
+        }
+
+        .ai-window {
+            position: relative;
+            padding: 1px;
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(167, 139, 250, 0.32), rgba(59, 130, 246, 0.08), rgba(34, 211, 238, 0.2));
+            box-shadow: 0 40px 110px rgba(0, 0, 0, 0.46);
+        }
+
+        .ai-window-inner {
+            position: relative;
+            overflow: hidden;
+            border-radius: 27px;
+            background:
+                radial-gradient(circle at 80% 15%, rgba(139, 92, 246, 0.11), transparent 30%),
+                linear-gradient(145deg, #0c1329, #070b19);
+        }
+
+        .window-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 58px;
+            padding: 0 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.09);
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #334155;
+        }
+
+        .window-dot:nth-child(2) {
+            background: #475569;
+        }
+
+        .window-dot:nth-child(3) {
+            background: #64748b;
+        }
+
+        .window-title {
+            color: #7e8ca7;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .window-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #5eead4;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .window-live i {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #2dd4bf;
+            box-shadow: 0 0 10px rgba(45, 212, 191, 0.9);
+        }
+
+        .ai-body {
+            padding: 22px;
+        }
+
+        .profile-strip {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.09);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .profile-avatar {
+            display: grid;
+            place-items: center;
+            width: 43px;
+            height: 43px;
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            border-radius: 13px;
+            color: #c4b5fd;
+            background: linear-gradient(145deg, rgba(139, 92, 246, 0.2), rgba(37, 99, 235, 0.12));
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .profile-copy {
+            flex: 1;
+        }
+
+        .profile-copy strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .profile-copy small {
+            display: block;
+            margin-top: 4px;
+            color: #687691;
+            font-size: 9px;
+        }
+
+        .profile-status {
+            color: #4ade80;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 0.78fr 1.22fr;
+            gap: 13px;
+            margin-top: 13px;
+        }
+
+        .score-card {
+            min-height: 185px;
+            padding: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.09);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.018);
+        }
+
+        .mini-label {
+            color: #75829c;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .score-ring {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 116px;
+            height: 116px;
+            margin: 18px auto 8px;
+            border-radius: 50%;
+            background: conic-gradient(#8b5cf6 0 87%, #1b2740 87% 100%);
+        }
+
+        .score-ring::before {
+            content: "";
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #0b1225;
+            box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.25);
+        }
+
+        .score-value {
+            position: relative;
+            z-index: 1;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 29px;
+            font-weight: 700;
+        }
+
+        .score-value small {
+            color: #73809a;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .score-caption {
+            text-align: center;
+            color: #71809b;
+            font-size: 9px;
+        }
+
+        .skill-card {
+            min-height: 185px;
+            padding: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.09);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.018);
+        }
+
+        .skill-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .skill-head span:last-child {
+            color: #64748b;
+            font-size: 9px;
+        }
+
+        .skill-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 17px;
+        }
+
+        .skill-pill {
+            padding: 7px 9px;
+            border: 1px solid rgba(56, 189, 248, 0.12);
+            border-radius: 9px;
+            color: #a5d8ee;
+            background: rgba(56, 189, 248, 0.055);
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .skill-pill:nth-child(2n) {
+            color: #c4b5fd;
+            border-color: rgba(139, 92, 246, 0.14);
+            background: rgba(139, 92, 246, 0.055);
+        }
+
+        .match-panel {
+            margin-top: 13px;
+            padding: 18px;
+            border: 1px solid rgba(34, 197, 94, 0.13);
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(34, 197, 94, 0.05), rgba(255, 255, 255, 0.016));
+        }
+
+        .match-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .match-company {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .company-mini-logo {
+            display: grid;
+            place-items: center;
+            width: 35px;
+            height: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .match-company strong {
+            display: block;
+            font-size: 11px;
+        }
+
+        .match-company small {
+            display: block;
+            margin-top: 3px;
+            color: #71809b;
+            font-size: 8px;
+        }
+
+        .match-score {
+            font-family: "Space Grotesk", sans-serif;
+            color: #4ade80;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .match-progress {
+            height: 7px;
+            margin-top: 14px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #18243b;
+        }
+
+        .match-progress span {
+            display: block;
+            width: 92%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #22c55e, #2dd4bf);
+            box-shadow: 0 0 18px rgba(34, 197, 94, 0.2);
+        }
+
+        .match-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            color: #63708a;
+            font-size: 8px;
+        }
+
+        .floating-chip {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 12px;
+            border: 1px solid rgba(148, 163, 184, 0.13);
+            border-radius: 13px;
+            background: rgba(7, 11, 24, 0.86);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(16px);
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .floating-chip.one {
+            left: -48px;
+            bottom: 90px;
+        }
+
+        .floating-chip.two {
+            right: -42px;
+            top: 105px;
+            animation-delay: -2.1s;
+        }
+
+        .chip-icon {
+            display: grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 9px;
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.1);
+            font-size: 12px;
+        }
+
+        .chip-copy strong {
+            display: block;
+            font-size: 9px;
+        }
+
+        .chip-copy small {
+            display: block;
+            margin-top: 2px;
+            color: #64748b;
+            font-size: 8px;
+        }
+
+        /* =========================================================
+           TRUST / METRICS
+           ========================================================= */
+
+        .trust-strip {
+            position: relative;
+            z-index: 3;
+            padding-bottom: 30px;
+        }
+
+        .trust-shell {
+            display: grid;
+            grid-template-columns: 1.15fr repeat(4, 1fr);
+            align-items: center;
+            border-top: 1px solid rgba(148, 163, 184, 0.09);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.09);
+        }
+
+        .trust-intro {
+            padding: 28px 25px 28px 0;
+        }
+
+        .trust-intro small {
+            color: #63708a;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        .trust-intro strong {
+            display: block;
+            margin-top: 8px;
+            color: #dce5f4;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 14px;
+        }
+
+        .metric {
+            padding: 28px 20px;
+            border-left: 1px solid rgba(148, 163, 184, 0.08);
+        }
+
+        .metric strong {
+            display: block;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 23px;
+            letter-spacing: -0.04em;
+        }
+
+        .metric span {
+            display: block;
+            margin-top: 4px;
+            color: #65728d;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           PRODUCT STORY
+           ========================================================= */
+
+        .story {
+            padding-top: 100px;
+        }
+
+        .story-layout {
+            display: grid;
+            grid-template-columns: 0.82fr 1.18fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .story-sticky {
+            position: sticky;
+            top: 120px;
+        }
+
+        .story-sticky h2 {
+            margin-top: 18px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(37px, 4.7vw, 59px);
+            line-height: 1.03;
+            letter-spacing: -0.05em;
+        }
+
+        .story-sticky p {
+            max-width: 430px;
+            margin-top: 20px;
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .story-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 28px;
+            color: #7f8ca5;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .story-note i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22d3ee;
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.7);
+        }
+
+        .feature-stack {
+            display: grid;
+            gap: 14px;
+        }
+
+        .feature-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: 62px 1fr auto;
+            gap: 18px;
+            align-items: start;
+            padding: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 20px;
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.76), rgba(7, 11, 22, 0.72));
+            transition: 0.3s ease;
+        }
+
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 0 0, rgba(139, 92, 246, 0.1), transparent 36%);
+            opacity: 0;
+            transition: 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.25);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            color: #c4b5fd;
+            background: linear-gradient(145deg, rgba(139, 92, 246, 0.16), rgba(37, 99, 235, 0.06));
+            font-size: 20px;
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            color: #7dd3fc;
+            border-color: rgba(56, 189, 248, 0.18);
+            background: rgba(56, 189, 248, 0.07);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            color: #86efac;
+            border-color: rgba(34, 197, 94, 0.18);
+            background: rgba(34, 197, 94, 0.06);
+        }
+
+        .feature-card h3 {
+            position: relative;
+            z-index: 1;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 17px;
+            letter-spacing: -0.02em;
+        }
+
+        .feature-card p {
+            position: relative;
+            z-index: 1;
+            max-width: 490px;
+            margin-top: 7px;
+            color: #77849d;
+            font-size: 11px;
+            line-height: 1.65;
+        }
+
+        .feature-link {
+            position: relative;
+            z-index: 1;
+            align-self: center;
+            color: #a78bfa;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           COMPANY INTELLIGENCE
+           ========================================================= */
+
+        .company-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .company-section::before {
+            content: "";
+            position: absolute;
+            width: 720px;
+            height: 720px;
+            left: -360px;
+            top: 160px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.05);
+            filter: blur(100px);
+        }
+
+        .company-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .company-heading p {
+            max-width: 440px;
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: 13px;
+        }
+
+        .company-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.55fr;
+            gap: 18px;
+            margin-top: 42px;
+        }
+
+        .company-selector-panel {
+            padding: 23px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            background: rgba(10, 15, 33, 0.74);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .panel-title strong {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 13px;
+        }
+
+        .panel-title span {
+            color: #687691;
+            font-size: 9px;
+        }
+
+        .company-choice {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 13px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .company-choice:hover,
+        .company-choice.active {
+            border-color: rgba(139, 92, 246, 0.22);
+            background: rgba(139, 92, 246, 0.07);
+        }
+
+        .choice-logo {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.035);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .choice-copy {
+            flex: 1;
+        }
+
+        .choice-copy strong {
+            display: block;
+            font-size: 11px;
+        }
+
+        .choice-copy small {
+            display: block;
+            margin-top: 3px;
+            color: #63708a;
+            font-size: 8px;
+        }
+
+        .choice-score {
+            color: #a78bfa;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .compare-preview {
+            padding: 25px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            background:
+                radial-gradient(circle at 90% 0, rgba(139, 92, 246, 0.09), transparent 33%),
+                rgba(10, 15, 33, 0.74);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .preview-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .preview-company {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .preview-company .choice-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+        }
+
+        .preview-company strong {
+            display: block;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 17px;
+        }
+
+        .preview-company small {
+            display: block;
+            margin-top: 4px;
+            color: #66748f;
+            font-size: 9px;
+        }
+
+        .preview-score {
+            text-align: right;
+        }
+
+        .preview-score strong {
+            display: block;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 36px;
+            color: #a78bfa;
+        }
+
+        .preview-score span {
+            color: #66748f;
+            font-size: 9px;
+        }
+
+        .bar-row {
+            margin-top: 26px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            color: #75829c;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .bar-label strong {
+            color: #dbe4f4;
+        }
+
+        .bar {
+            height: 8px;
+            margin-top: 8px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #172238;
+        }
+
+        .bar span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+            box-shadow: 0 0 18px rgba(59, 130, 246, 0.2);
+        }
+
+        .bar-python span {
+            width: 96%;
+        }
+
+        .bar-sql span {
+            width: 82%;
+        }
+
+        .bar-dsa span {
+            width: 67%;
+        }
+
+        .bar-api span {
+            width: 74%;
+        }
+
+        .missing-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            margin-top: 22px;
+            padding: 13px;
+            border: 1px solid rgba(251, 113, 133, 0.12);
+            border-radius: 13px;
+            background: rgba(244, 63, 94, 0.045);
+        }
+
+        .missing-icon {
+            display: grid;
+            place-items: center;
+            width: 27px;
+            height: 27px;
+            flex-shrink: 0;
+            border-radius: 9px;
+            color: #fda4af;
+            background: rgba(244, 63, 94, 0.08);
+            font-size: 11px;
+        }
+
+        .missing-box strong {
+            display: block;
+            color: #fda4af;
+            font-size: 9px;
+        }
+
+        .missing-box p {
+            margin-top: 3px;
+            color: #7f8ca5;
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+        .compare-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            width: 100%;
+            min-height: 45px;
+            margin-top: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.28);
+            border-radius: 13px;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.85), rgba(37, 99, 235, 0.85));
+            font-size: 11px;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .compare-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.25);
+        }
+
+        /* =========================================================
+           TOOLKIT
+           ========================================================= */
+
+        .toolkit {
+            padding-top: 80px;
+        }
+
+        .toolkit-shell {
+            position: relative;
+            overflow: hidden;
+            padding: 48px;
+            border: 1px solid rgba(148, 163, 184, 0.11);
+            border-radius: 30px;
+            background:
+                radial-gradient(circle at 10% 0, rgba(139, 92, 246, 0.12), transparent 27%),
+                radial-gradient(circle at 92% 100%, rgba(34, 211, 238, 0.07), transparent 27%),
+                linear-gradient(145deg, rgba(12, 19, 40, 0.92), rgba(6, 10, 22, 0.92));
+            box-shadow: var(--shadow);
+        }
+
+        .toolkit-head {
+            text-align: center;
+        }
+
+        .toolkit-head h2 {
+            margin-top: 14px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(32px, 4.5vw, 53px);
+            line-height: 1;
+            letter-spacing: -0.045em;
+        }
+
+        .toolkit-head p {
+            max-width: 600px;
+            margin: 17px auto 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .toolkit-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 35px;
+        }
+
+        .tool-card {
+            min-height: 180px;
+            padding: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 17px;
+            background: rgba(255, 255, 255, 0.018);
+            transition: 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139, 92, 246, 0.25);
+            background: rgba(139, 92, 246, 0.04);
+        }
+
+        .tool-number {
+            color: #55627b;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .tool-icon {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            margin-top: 18px;
+            border: 1px solid rgba(139, 92, 246, 0.18);
+            border-radius: 11px;
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.08);
+            font-size: 14px;
+        }
+
+        .tool-card h3 {
+            margin-top: 13px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 13px;
+        }
+
+        .tool-card p {
+            margin-top: 6px;
+            color: #687691;
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        /* =========================================================
+           PROCESS TIMELINE
+           ========================================================= */
+
+        .process {
+            padding-top: 110px;
+        }
+
+        .process-heading {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .process-heading p {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .process-track {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-top: 55px;
+        }
+
+        .process-track::before {
+            content: "";
+            position: absolute;
+            left: 12%;
+            right: 12%;
+            top: 31px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.3), rgba(34, 211, 238, 0.25), rgba(139, 92, 246, 0));
+        }
+
+        .process-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .process-node {
+            display: grid;
+            place-items: center;
+            width: 62px;
+            height: 62px;
+            margin: 0 auto;
+            border: 1px solid rgba(139, 92, 246, 0.22);
+            border-radius: 19px;
+            color: #c4b5fd;
+            background: #080d1e;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .process-step:nth-child(2) .process-node {
+            color: #7dd3fc;
+            border-color: rgba(56, 189, 248, 0.2);
+        }
+
+        .process-step:nth-child(3) .process-node {
+            color: #86efac;
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .process-step:nth-child(4) .process-node {
+            color: #f9a8d4;
+            border-color: rgba(244, 114, 182, 0.2);
+        }
+
+        .process-step h3 {
+            margin-top: 20px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 14px;
+        }
+
+        .process-step p {
+            max-width: 190px;
+            margin: 8px auto 0;
+            color: #687691;
+            font-size: 10px;
+            line-height: 1.65;
+        }
+
+        /* =========================================================
+           INSIGHTS / DATA CARD
+           ========================================================= */
+
+        .insights {
+            padding-top: 105px;
+        }
+
+        .insight-layout {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 18px;
+        }
+
+        .insight-main,
+        .insight-side {
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            background: linear-gradient(145deg, rgba(12, 19, 40, 0.84), rgba(7, 11, 23, 0.84));
+            box-shadow: var(--shadow-soft);
+        }
+
+        .insight-main {
+            padding: 26px;
+        }
+
+        .insight-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .insight-top h3 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 17px;
+        }
+
+        .insight-top small {
+            display: block;
+            margin-top: 5px;
+            color: #65728c;
+            font-size: 9px;
+        }
+
+        .insight-badge {
+            padding: 7px 9px;
+            border: 1px solid rgba(34, 197, 94, 0.16);
+            border-radius: 9px;
+            color: #86efac;
+            background: rgba(34, 197, 94, 0.06);
+            font-size: 8px;
+            font-weight: 700;
+        }
+
+        .chart {
+            display: flex;
+            align-items: end;
+            gap: 13px;
+            height: 220px;
+            margin-top: 28px;
+            padding: 0 6px 28px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .chart-column {
+            position: relative;
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: end;
+        }
+
+        .chart-bar {
+            width: 100%;
+            min-height: 20px;
+            border-radius: 8px 8px 3px 3px;
+            background: linear-gradient(180deg, #a78bfa, #4f46e5);
+            opacity: 0.88;
+        }
+
+        .chart-column:nth-child(2) .chart-bar,
+        .chart-column:nth-child(5) .chart-bar {
+            background: linear-gradient(180deg, #60a5fa, #2563eb);
+        }
+
+        .chart-column:nth-child(3) .chart-bar {
+            background: linear-gradient(180deg, #67e8f9, #0891b2);
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -23px;
+            left: 50%;
+            color: #5f6d86;
+            font-size: 8px;
+            transform: translateX(-50%);
+        }
+
+        .insight-side {
+            display: grid;
+            align-content: start;
+            padding: 26px;
+        }
+
+        .insight-side h3 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 17px;
+        }
+
+        .insight-side>p {
+            margin-top: 8px;
+            color: #687691;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .recommendation {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            margin-top: 18px;
+            padding: 13px;
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 13px;
+            background: rgba(255, 255, 255, 0.018);
+        }
+
+        .recommendation-icon {
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+            border-radius: 9px;
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.08);
+            font-size: 11px;
+        }
+
+        .recommendation strong {
+            display: block;
+            font-size: 10px;
+        }
+
+        .recommendation p {
+            margin-top: 3px;
+            color: #66738c;
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+        /* =========================================================
+           CTA
+           ========================================================= */
+
+        .cta-section {
+            padding: 120px 0 105px;
+        }
+
+        .cta-shell {
+            position: relative;
+            overflow: hidden;
+            padding: 76px 65px;
+            border: 1px solid rgba(139, 92, 246, 0.18);
+            border-radius: 32px;
+            text-align: center;
+            background:
+                radial-gradient(circle at 50% 0, rgba(139, 92, 246, 0.19), transparent 38%),
+                radial-gradient(circle at 12% 100%, rgba(34, 211, 238, 0.08), transparent 28%),
+                linear-gradient(145deg, rgba(13, 20, 42, 0.92), rgba(7, 11, 24, 0.94));
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.35);
+        }
+
+        .cta-shell::before,
+        .cta-shell::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cta-shell::before {
+            width: 300px;
+            height: 300px;
+            left: -170px;
+            top: -170px;
+            border: 1px solid rgba(139, 92, 246, 0.13);
+        }
+
+        .cta-shell::after {
+            width: 260px;
+            height: 260px;
+            right: -150px;
+            bottom: -150px;
+            border: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .cta-shell h2 {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 16px auto 0;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(38px, 5.5vw, 66px);
+            line-height: 1;
+            letter-spacing: -0.055em;
+        }
+
+        .cta-shell p {
+            position: relative;
+            z-index: 1;
+            max-width: 590px;
+            margin: 19px auto 0;
+            color: #78859f;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .cta-actions {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .site-footer {
+            padding: 32px 0 45px;
+            border-top: 1px solid rgba(148, 163, 184, 0.08);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.4fr repeat(3, 0.7fr);
+            gap: 40px;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            margin-top: 12px;
+            color: #5f6d86;
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .footer-heading {
+            color: #d4dbea;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: grid;
+            gap: 9px;
+            margin-top: 13px;
+        }
+
+        .footer-links a {
+            color: #65728b;
+            font-size: 10px;
+            transition: 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #c4b5fd;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 35px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(148, 163, 184, 0.07);
+            color: #4f5c73;
+            font-size: 9px;
+        }
+
+        /* =========================================================
+           REVEAL ANIMATION
+           ========================================================= */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 {
+            transition-delay: 0.08s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.16s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.24s;
+        }
+
+        /* =========================================================
+           KEYFRAMES
+           ========================================================= */
+
+        @keyframes heroIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes visualIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.55;
+                transform: scale(0.78);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-120%);
+            }
+
+            100% {
+                transform: translateX(120%);
+            }
+        }
+
+        /* =========================================================
+           RESPONSIVE — 1100
+           ========================================================= */
+
+        @media (max-width: 1100px) {
+            :root {
+                --container: 1000px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .hero-copy {
+                max-width: 780px;
+            }
+
+            .hero-visual {
+                max-width: 760px;
+                width: 100%;
+                margin: 0 auto;
+            }
+
+            .story-layout {
+                grid-template-columns: 1fr;
+                gap: 45px;
+            }
+
+            .story-sticky {
+                position: static;
+            }
+
+            .company-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toolkit-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1.4fr repeat(3, 1fr);
+            }
+        }
+
+        /* =========================================================
+           RESPONSIVE — 850
+           ========================================================= */
+
+        @media (max-width: 850px) {
+            .container {
+                width: min(calc(100% - 34px), var(--container));
+            }
+
+            .nav-shell {
+                padding-left: 12px;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: calc(100% + 9px);
+                left: 0;
+                right: 0;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px;
+                border: 1px solid rgba(148, 163, 184, 0.11);
+                border-radius: 17px;
+                background: rgba(7, 11, 24, 0.96);
+                box-shadow: var(--shadow-soft);
+                backdrop-filter: blur(20px);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-link {
+                padding: 12px 14px;
+            }
+
+            .nav-toggle {
+                display: grid;
+                place-items: center;
+            }
+
+            .theme-btn {
+                display: none;
+            }
+
+            .nav-actions .nav-cta {
+                display: none;
+            }
+
+            .hero {
+                min-height: auto;
+                padding-top: 130px;
+            }
+
+            .hero-title {
+                font-size: clamp(48px, 11vw, 74px);
+            }
+
+            .trust-shell {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .trust-intro {
+                grid-column: span 2;
+            }
+
+            .metric:nth-child(3) {
+                border-left: 0;
+            }
+
+            .company-heading {
+                display: block;
+            }
+
+            .company-heading p {
+                margin-top: 20px;
+            }
+
+            .process-track {
+                grid-template-columns: repeat(2, 1fr);
+                row-gap: 38px;
+            }
+
+            .process-track::before {
+                display: none;
+            }
+
+            .insight-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-brand {
+                grid-column: span 2;
+            }
+        }
+
+        /* =========================================================
+           RESPONSIVE — 600
+           ========================================================= */
+
+        @media (max-width: 600px) {
+            .container {
+                width: min(calc(100% - 26px), var(--container));
+            }
+
+            .section {
+                padding: 80px 0;
+            }
+
+            .site-nav {
+                padding: 10px 0;
+            }
+
+            .nav-shell {
+                min-height: 58px;
+                border-radius: 16px;
+            }
+
+            .brand-tag {
+                display: none;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .hero {
+                padding: 112px 0 70px;
+            }
+
+            .hero-title {
+                font-size: 46px;
+                line-height: 1.01;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .hero-actions {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .primary-btn,
+            .secondary-btn {
+                width: 100%;
+            }
+
+            .hero-proof {
+                gap: 10px 14px;
+            }
+
+            .floating-chip {
+                display: none;
+            }
+
+            .ai-body {
+                padding: 13px;
+            }
+
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-card,
+            .skill-card {
+                min-height: auto;
+            }
+
+            .score-ring {
+                width: 105px;
+                height: 105px;
+            }
+
+            .score-ring::before {
+                width: 81px;
+                height: 81px;
+            }
+
+            .trust-shell {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .trust-intro {
+                grid-column: span 2;
+                padding-right: 0;
+            }
+
+            .metric {
+                padding: 20px 12px;
+            }
+
+            .story-sticky h2,
+            .section-heading h2 {
+                font-size: 38px;
+            }
+
+            .feature-card {
+                grid-template-columns: 48px 1fr;
+                padding: 18px;
+            }
+
+            .feature-icon {
+                width: 45px;
+                height: 45px;
+                border-radius: 13px;
+            }
+
+            .feature-link {
+                grid-column: 2;
+                justify-self: start;
+                margin-top: 8px;
+            }
+
+            .company-selector-panel,
+            .compare-preview {
+                padding: 17px;
+            }
+
+            .preview-top {
+                align-items: flex-start;
+            }
+
+            .preview-score strong {
+                font-size: 29px;
+            }
+
+            .toolkit-shell {
+                padding: 30px 17px;
+                border-radius: 23px;
+            }
+
+            .toolkit-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-card {
+                min-height: auto;
+            }
+
+            .process-track {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-shell {
+                padding: 55px 20px;
+                border-radius: 24px;
+            }
+
+            .cta-shell h2 {
+                font-size: 40px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 28px 18px;
+            }
+
+            .footer-brand {
+                grid-column: span 2;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        /* =========================================================
+           ACCESSIBILITY
+           ========================================================= */
+
+        :focus-visible {
+            outline: 2px solid #a78bfa;
+            outline-offset: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="page-enter">
+
+    <!-- =========================================================
+         NAVIGATION
+         ========================================================= -->
+
+    <header class="site-nav" id="siteNav">
+        <div class="container">
+            <div class="nav-shell">
+
+                <a class="brand" href="{{ url_for('home') }}" aria-label="CareerAI Home">
+                    <span class="brand-mark">✦</span>
+                    <span class="brand-copy">
+                        <span class="brand-name">CareerAI</span>
+                        <span class="brand-tag">AI Internship Engine</span>
+                    </span>
+                </a>
+
+                <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+                    <a class="nav-link active" href="#home">Home</a>
+                    <a class="nav-link" href="#workflow">How it works</a>
+                    <a class="nav-link" href="#companies">Companies</a>
+                    <a class="nav-link" href="#toolkit">Toolkit</a>
+                    <a class="nav-link" href="#insights">Insights</a>
+                </nav>
+
+                <div class="nav-actions">
+                    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle visual mode">
+                        ◐
+                    </button>
+
+                    <a class="nav-cta" href="{{ url_for('auth.register') }}">
+                        Get Started
+                        <span>→</span>
+                    </a>
+
+                    <button class="nav-toggle" id="navToggle" type="button" aria-label="Open navigation">
+                        ☰
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================================================
+         HERO
+         ========================================================= -->
+
+    <main id="home">
+
+        <section class="hero" style="position:relative;overflow:hidden;">
+            <canvas id="particle-canvas"
+                style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+            <div class="hero-orb orb-one"></div>
+            <div class="hero-orb orb-two"></div>
+
+            <div class="container" style="position:relative;z-index:1;">
+                <div class="hero-grid">
+
+                    <div class="hero-copy">
+
+                        <div class="hero-kicker">
+                            <span class="live-dot"></span>
+                            AI-powered career intelligence
+                        </div>
+
+                        <h1 class="hero-title">
+                            Turn your resume
+                            <span class="line-two gradient-text text-shimmer">into your advantage.</span>
+                            <span class="line-three">Not just a PDF.</span>
+                        </h1>
+
+                        <p class="hero-description">
+                            CareerAI analyzes your resume, extracts your strongest skills,
+                            measures ATS compatibility, compares your profile with target
+                            companies and helps you discover internship opportunities that
+                            actually fit your profile.
+                        </p>
+
+                        <div class="hero-actions">
+
+                            <a class="primary-btn btn-press pulse-glow" href="{{ url_for('auth.register') }}">
+                                <span>Build My Career Profile</span>
+                                <span>↗</span>
+                            </a>
+
+                            <a class="secondary-btn" href="{{ url_for('auth.login') }}">
+                                <span>Open Dashboard</span>
+                                <span>→</span>
+                            </a>
+
+                        </div>
+
+                        <div class="hero-proof">
+
+                            <span class="proof-item">
+                                <span class="proof-check">✓</span>
+                                Resume parsing
+                            </span>
+
+                            <span class="proof-item">
+                                <span class="proof-check">✓</span>
+                                ATS intelligence
+                            </span>
+
+                            <span class="proof-item">
+                                <span class="proof-check">✓</span>
+                                Company matching
+                            </span>
+
+                            <span class="proof-item">
+                                <span class="proof-check">✓</span>
+                                Internship recommendations
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="hero-visual">
+
+                        <div class="ai-window">
+
+                            <div class="ai-window-inner">
+
+                                <div class="window-top">
+
+                                    <div class="window-dots">
+                                        <span class="window-dot"></span>
+                                        <span class="window-dot"></span>
+                                        <span class="window-dot"></span>
+                                    </div>
+
+                                    <div class="window-title">
+                                        Resume Intelligence / Live
+                                    </div>
+
+                                    <div class="window-live">
+                                        <i></i>
+                                        ANALYZING
+                                    </div>
+
+                                </div>
+
+                                <div class="ai-body">
+
+                                    <div class="profile-strip">
+
+                                        <div class="profile-avatar">
+                                            CV
+                                        </div>
+
+                                        <div class="profile-copy">
+                                            <strong>Resume intelligence report</strong>
+                                            <small>PDF • Parsed • Skills detected • Profile ready</small>
+                                        </div>
+
+                                        <div class="profile-status">
+                                            READY
+                                        </div>
+
+                                    </div>
+
+                                    <div class="analysis-grid">
+
+                                        <div class="score-card">
+
+                                            <div class="mini-label">
+                                                ATS compatibility
+                                            </div>
+
+                                            <div class="score-ring">
+                                                <div class="score-value">
+                                                    87
+                                                    <small>/100</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="score-caption">
+                                                Strong resume profile
+                                            </div>
+
+                                        </div>
+
+                                        <div class="skill-card">
+
+                                            <div class="skill-head">
+                                                <div class="mini-label">
+                                                    Detected skills
+                                                </div>
+                                                <span>06 signals</span>
+                                            </div>
+
+                                            <div class="skill-cloud">
+                                                <span class="skill-pill">Python</span>
+                                                <span class="skill-pill">MySQL</span>
+                                                <span class="skill-pill">Flask</span>
+                                                <span class="skill-pill">Git</span>
+                                                <span class="skill-pill">HTML</span>
+                                                <span class="skill-pill">CSS</span>
+                                                <span class="skill-pill">REST API</span>
+                                                <span class="skill-pill">SQL</span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="match-panel">
+
+                                        <div class="match-top">
+
+                                            <div class="match-company">
+
+                                                <div class="company-mini-logo">
+                                                    TN
+                                                </div>
+
+                                                <div>
+                                                    <div class="mini-label">Best opportunity match</div>
+                                                    <strong>Python Backend Intern</strong>
+                                                    <small>TechNova Pvt Ltd • Engineering</small>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="match-score">
+                                                92%
+                                            </div>
+
+                                        </div>
+
+                                        <div class="match-progress">
+                                            <span></span>
+                                        </div>
+
+                                        <div class="match-meta">
+                                            <span>Skills aligned</span>
+                                            <span>Excellent fit</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="floating-chip one">
+                            <div class="chip-icon">✦</div>
+                            <div class="chip-copy">
+                                <strong>Skill gap detected</strong>
+                                <small>DSA • REST APIs</small>
+                            </div>
+                        </div>
+
+                        <div class="floating-chip two">
+                            <div class="chip-icon">↗</div>
+                            <div class="chip-copy">
+                                <strong>Match improved</strong>
+                                <small>+14% profile strength</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             TRUST STRIP
+             ===================================================== -->
+
+        <section class="trust-strip" data-reveal>
+            <div class="container">
+
+                <div class="trust-shell" data-stagger>
+
+                    <div class="trust-intro">
+                        <small>One intelligent workflow</small>
+                        <strong>From resume upload to career direction.</strong>
+                    </div>
+
+                    <div class="metric">
+                        <strong>01</strong>
+                        <span>Resume intelligence</span>
+                    </div>
+
+                    <div class="metric">
+                        <strong>02</strong>
+                        <span>ATS score</span>
+                    </div>
+
+                    <div class="metric">
+                        <strong>03</strong>
+                        <span>Company comparison</span>
+                    </div>
+
+                    <div class="metric">
+                        <strong>04</strong>
+                        <span>Internship matching</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =====================================================
+             WORKFLOW
+             ===================================================== -->
+
+        <section class="section story" id="workflow">
+
+            <div class="container">
+
+                <div class="story-layout">
+
+                    <div class="story-sticky reveal">
+
+                        <div class="eyebrow">
+                            <span class="eyebrow-dot"></span>
+                            Career intelligence
+                        </div>
+
+                        <h2>
+                            Your resume
+                            becomes a
+                            <span class="gradient-text">career map.</span>
+                        </h2>
+
+                        <p>
+                            Instead of only showing a score, CareerAI turns the information
+                            inside your resume into actionable signals — what you already
+                            know, where you match, what is missing and which direction
+                            deserves your attention.
+                        </p>
+
+                        <div class="story-note">
+                            <i></i>
+                            Built around the skills already present in your profile.
+                        </div>
+
+                    </div>
+
+                    <div class="feature-stack">
+
+                        <article class="feature-card reveal delay-1">
+
+                            <div class="feature-icon">▤</div>
+
+                            <div>
+                                <h3>Resume Analysis</h3>
+                                <p>
+                                    Upload a PDF or DOCX resume and extract useful profile
+                                    information and technical skills without manually entering
+                                    everything again.
+                                </p>
+                            </div>
+
+                            <div class="feature-link">
+                                Smart Parsing →
+                            </div>
+
+                        </article>
+
+                        <article class="feature-card reveal delay-2">
+
+                            <div class="feature-icon">◎</div>
+
+                            <div>
+                                <h3>ATS Intelligence</h3>
+                                <p>
+                                    Understand your compatibility score and see where your
+                                    resume can become stronger before applying.
+                                </p>
+                            </div>
+
+                            <div class="feature-link">
+                                Score & Improve →
+                            </div>
+
+                        </article>
+
+                        <article class="feature-card reveal delay-3">
+
+                            <div class="feature-icon">⌁</div>
+
+                            <div>
+                                <h3>Internship Matching</h3>
+                                <p>
+                                    Discover internship opportunities ranked according to
+                                    the skills detected from your resume.
+                                </p>
+                            </div>
+
+                            <div class="feature-link">
+                                Find Your Match →
+                            </div>
+
+                        </article>
+
+                        <article class="feature-card reveal">
+
+                            <div class="feature-icon">⌂</div>
+
+                            <div>
+                                <h3>Company Intelligence</h3>
+                                <p>
+                                    Compare your current skill profile with technical
+                                    requirements for companies and identify the strongest fit.
+                                </p>
+                            </div>
+
+                            <div class="feature-link">
+                                Compare →
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             COMPANY INTELLIGENCE
+             ===================================================== -->
+
+        <section class="section company-section" id="companies">
+
+            <div class="container">
+
+                <div class="company-heading reveal">
+
+                    <div class="section-heading">
+                        <div class="eyebrow">
+                            <span class="eyebrow-dot"></span>
+                            Company intelligence
+                        </div>
+
+                        <h2>
+                            How close is your resume to your
+                            <span class="gradient-text">dream company?</span>
+                        </h2>
+                    </div>
+
+                    <p>
+                        Compare your detected resume skills with entry-level technical
+                        requirements from companies like Google, TCS and Infosys.
+                        See the gap before you apply.
+                    </p>
+
+                </div>
+
+                <div class="company-grid">
+
+                    <div class="company-selector-panel reveal">
+
+                        <div class="panel-title">
+                            <strong>Target companies</strong>
+                            <span>Profile comparison</span>
+                        </div>
+
+                        <div class="company-choice active">
+                            <div class="choice-logo">G</div>
+                            <div class="choice-copy">
+                                <strong>Google</strong>
+                                <small>University Graduate / Entry-Level</small>
+                            </div>
+                            <div class="choice-score">74%</div>
+                        </div>
+
+                        <div class="company-choice">
+                            <div class="choice-logo">T</div>
+                            <div class="choice-copy">
+                                <strong>TCS</strong>
+                                <small>Ninja • Digital • Prime</small>
+                            </div>
+                            <div class="choice-score">81%</div>
+                        </div>
+
+                        <div class="company-choice">
+                            <div class="choice-logo">I</div>
+                            <div class="choice-copy">
+                                <strong>Infosys</strong>
+                                <small>Systems Engineer / Specialist</small>
+                            </div>
+                            <div class="choice-score">68%</div>
+                        </div>
+
+                    </div>
+
+                    <div class="compare-preview reveal delay-1">
+
+                        <div class="preview-top">
+
+                            <div class="preview-company">
+
+                                <div class="choice-logo">G</div>
+
+                                <div>
+                                    <strong>Google</strong>
+                                    <small>University Graduate / Entry-Level Software Roles</small>
+                                </div>
+
+                            </div>
+
+                            <div class="preview-score">
+                                <strong>74%</strong>
+                                <span>resume match</span>
+                            </div>
+
+                        </div>
+
+                        <div class="bar-row">
+                            <div class="bar-label">
+                                <span>Python / Programming</span>
+                                <strong>96%</strong>
+                            </div>
+                            <div class="bar bar-python">
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <div class="bar-row">
+                            <div class="bar-label">
+                                <span>SQL</span>
+                                <strong>82%</strong>
+                            </div>
+                            <div class="bar bar-sql">
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <div class="bar-row">
+                            <div class="bar-label">
+                                <span>DSA</span>
+                                <strong>67%</strong>
+                            </div>
+                            <div class="bar bar-dsa">
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <div class="bar-row">
+                            <div class="bar-label">
+                                <span>Problem solving / APIs</span>
+                                <strong>74%</strong>
+                            </div>
+                            <div class="bar bar-api">
+                                <span></span>
+                            </div>
+                        </div>
+
+                        <div class="missing-box">
+
+                            <div class="missing-icon">!</div>
+
+                            <div>
+                                <strong>Potential skill gap</strong>
+                                <p>
+                                    Strengthen DSA and problem-solving evidence to improve
+                                    your alignment with the selected role.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <a class="compare-action" href="{{ url_for('auth.register') }}">
+                            <span>Compare My Resume</span>
+                            <span>→</span>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             TOOLKIT
+             ===================================================== -->
+
+        <section class="section toolkit" id="toolkit">
+
+            <div class="container">
+
+                <div class="toolkit-shell">
+
+                    <div class="toolkit-head reveal">
+
+                        <div class="eyebrow">
+                            <span class="eyebrow-dot"></span>
+                            Career toolkit
+                        </div>
+
+                        <h2>
+                            Everything you need to
+                            <span class="gradient-text">move forward.</span>
+                        </h2>
+
+                        <p>
+                            One platform for the most important steps between
+                            “I have a resume” and “I know where I should apply.”
+                        </p>
+
+                    </div>
+
+                    <div class="toolkit-grid">
+
+                        <article class="tool-card reveal">
+                            <div class="tool-number">01</div>
+                            <div class="tool-icon">▤</div>
+                            <h3>Upload Resume</h3>
+                            <p>
+                                Support for PDF and DOCX files with smart resume parsing.
+                            </p>
+                        </article>
+
+                        <article class="tool-card reveal delay-1">
+                            <div class="tool-number">02</div>
+                            <div class="tool-icon">◎</div>
+                            <h3>Get ATS Score</h3>
+                            <p>
+                                Understand compatibility and discover areas to improve.
+                            </p>
+                        </article>
+
+                        <article class="tool-card reveal delay-2">
+                            <div class="tool-number">03</div>
+                            <div class="tool-icon">⌁</div>
+                            <h3>Match Companies</h3>
+                            <p>
+                                Compare your skills with selected company requirements.
+                            </p>
+                        </article>
+
+                        <article class="tool-card reveal delay-3">
+                            <div class="tool-number">04</div>
+                            <div class="tool-icon">↗</div>
+                            <h3>Find Internships</h3>
+                            <p>
+                                Receive recommendations based on the skills in your profile.
+                            </p>
+                        </article>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             PROCESS
+             ===================================================== -->
+
+        <section class="section process">
+
+            <div class="container">
+
+                <div class="section-heading process-heading reveal">
+
+                    <div class="eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        The workflow
+                    </div>
+
+                    <h2>
+                        Four steps.
+                        <span class="gradient-text">One clearer direction.</span>
+                    </h2>
+
+                    <p>
+                        CareerAI keeps the workflow simple so the useful information
+                        stays visible instead of getting buried inside complicated screens.
+                    </p>
+
+                </div>
+
+                <div class="process-track">
+
+                    <div class="process-step reveal">
+                        <div class="process-node">01</div>
+                        <h3>Upload</h3>
+                        <p>
+                            Add your existing resume as a PDF or DOCX file.
+                        </p>
+                    </div>
+
+                    <div class="process-step reveal delay-1">
+                        <div class="process-node">02</div>
+                        <h3>Analyze</h3>
+                        <p>
+                            Extract skills and calculate the resume's ATS compatibility.
+                        </p>
+                    </div>
+
+                    <div class="process-step reveal delay-2">
+                        <div class="process-node">03</div>
+                        <h3>Compare</h3>
+                        <p>
+                            See how your profile aligns with target company requirements.
+                        </p>
+                    </div>
+
+                    <div class="process-step reveal delay-3">
+                        <div class="process-node">04</div>
+                        <h3>Discover</h3>
+                        <p>
+                            Explore internship recommendations based on your skills.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             INSIGHTS
+             ===================================================== -->
+
+        <section class="section insights" id="insights">
+
+            <div class="container">
+
+                <div class="insight-layout">
+
+                    <div class="insight-main reveal">
+
+                        <div class="insight-top">
+
+                            <div>
+                                <h3>Profile strength overview</h3>
+                                <small>Illustrative dashboard preview</small>
+                            </div>
+
+                            <div class="insight-badge">
+                                PROFILE HEALTHY
+                            </div>
+
+                        </div>
+
+                        <div class="chart">
+
+                            <div class="chart-column">
+                                <div class="chart-bar" style="height: 48%;"></div>
+                                <span class="chart-label">Skills</span>
+                            </div>
+
+                            <div class="chart-column">
+                                <div class="chart-bar" style="height: 68%;"></div>
+                                <span class="chart-label">ATS</span>
+                            </div>
+
+                            <div class="chart-column">
+                                <div class="chart-bar" style="height: 82%;"></div>
+                                <span class="chart-label">Projects</span>
+                            </div>
+
+                            <div class="chart-column">
+                                <div class="chart-bar" style="height: 61%;"></div>
+                                <span class="chart-label">DSA</span>
+                            </div>
+
+                            <div class="chart-column">
+                                <div class="chart-bar" style="height: 88%;"></div>
+                                <span class="chart-label">SQL</span>
+                            </div>
+
+                            <div class="chart-column">
+                                <div class="chart-bar" style="height: 72%;"></div>
+                                <span class="chart-label">APIs</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="insight-side reveal delay-1">
+
+                        <h3>What your analysis can tell you</h3>
+
+                        <p>
+                            Use the detected signals to decide what to improve before
+                            spending time on applications.
+                        </p>
+
+                        <div class="recommendation">
+
+                            <div class="recommendation-icon">✦</div>
+
+                            <div>
+                                <strong>Strongest domain</strong>
+                                <p>
+                                    Backend development — Python, SQL, Flask and Git.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="recommendation">
+
+                            <div class="recommendation-icon">◎</div>
+
+                            <div>
+                                <strong>Improve your evidence</strong>
+                                <p>
+                                    Add measurable project outcomes and technical depth.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="recommendation">
+
+                            <div class="recommendation-icon">↗</div>
+
+                            <div>
+                                <strong>Next opportunity</strong>
+                                <p>
+                                    Focus on internships where your current stack is already
+                                    closely aligned.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             CTA
+             ===================================================== -->
+
+        <section class="cta-section">
+
+            <div class="container">
+
+                <div class="cta-shell reveal">
+
+                    <div class="eyebrow">
+                        <span class="eyebrow-dot"></span>
+                        Ready to start?
+                    </div>
+
+                    <h2>
+                        Your next internship could be
+                        <span class="gradient-text">one upload away.</span>
+                    </h2>
+
+                    <p>
+                        Build your profile, analyze your resume, compare companies
+                        and discover opportunities from one focused career workspace.
+                    </p>
+
+                    <div class="cta-actions">
+
+                        <a class="primary-btn btn-press" href="{{ url_for('auth.register') }}">
+                            <span>Create My Free Profile</span>
+                            <span>↗</span>
+                        </a>
+
+                        <a class="secondary-btn" href="{{ url_for('auth.login') }}">
+                            <span>I already have an account</span>
+                            <span>→</span>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer class="site-footer">
+
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div class="footer-brand">
+
+                    <a class="brand" href="{{ url_for('home') }}">
+                        <span class="brand-mark">✦</span>
+                        <span class="brand-copy">
+                            <span class="brand-name">CareerAI</span>
+                            <span class="brand-tag">AI Internship Engine</span>
+                        </span>
+                    </a>
+
+                    <p>
+                        Intelligent tools for smarter resume decisions,
+                        company matching and internship discovery.
+                    </p>
+
+                </div>
+
+                <div>
+                    <div class="footer-heading">Platform</div>
+                    <div class="footer-links">
+                        <a href="#workflow">Resume Analysis</a>
+                        <a href="#workflow">ATS Intelligence</a>
+                        <a href="#companies">Company Match</a>
+                        <a href="#toolkit">Internship Matching</a>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="footer-heading">Account</div>
+                    <div class="footer-links">
+                        <a href="{{ url_for('auth.login') }}">Login</a>
+                        <a href="{{ url_for('auth.register') }}">Register</a>
+                        <a href="{{ url_for('auth.login') }}">Dashboard</a>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="footer-heading">Explore</div>
+                    <div class="footer-links">
+                        <a href="#companies">Companies</a>
+                        <a href="#toolkit">Career Toolkit</a>
+                        <a href="#insights">Insights</a>
+                        <a href="#home">Back to top ↑</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 CareerAI — AI Internship Engine</span>
+                <span>Built for smarter career decisions.</span>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- =========================================================
+         JAVASCRIPT
+         ========================================================= -->
+
+    <script>
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+
+        const siteNav = document.getElementById("siteNav");
+        const navToggle = document.getElementById("navToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        function updateNavigation() {
+            if (window.scrollY > 24) {
+                siteNav.classList.add("scrolled");
+            } else {
+                siteNav.classList.remove("scrolled");
+            }
+        }
+
+        window.addEventListener("scroll", updateNavigation, {
+            passive: true
+        });
+
+        updateNavigation();
+
+        navToggle.addEventListener("click", function () {
+            navLinks.classList.toggle("open");
+
+            const expanded = navLinks.classList.contains("open");
+
+            navToggle.setAttribute(
+                "aria-label",
+                expanded ? "Close navigation" : "Open navigation"
+            );
+
+            navToggle.textContent = expanded ? "×" : "☰";
+        });
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navLinks.classList.remove("open");
+                navToggle.textContent = "☰";
+            });
+        });
+
+        /* =========================================================
+           SCROLL REVEAL
+           ========================================================= */
+
+        const revealElements = document.querySelectorAll(".reveal");
+
+        const revealObserver = new IntersectionObserver(
+            function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                threshold: 0.12
+            }
+        );
+
+        revealElements.forEach(function (element) {
+            revealObserver.observe(element);
+        });
+
+        /* =========================================================
+           COMPANY PREVIEW INTERACTION
+           ========================================================= */
+
+        const companyChoices = document.querySelectorAll(".company-choice");
+
+        const companyData = {
+            Google: {
+                score: "74%",
+                role: "University Graduate / Entry-Level Software Roles",
+                python: "96%",
+                sql: "82%",
+                dsa: "67%",
+                api: "74%",
+                logo: "G"
+            },
+            TCS: {
+                score: "81%",
+                role: "Ninja • Digital • Prime",
+                python: "92%",
+                sql: "94%",
+                dsa: "84%",
+                api: "72%",
+                logo: "T"
+            },
+            Infosys: {
+                score: "68%",
+                role: "Systems Engineer / Specialist Programmer",
+                python: "89%",
+                sql: "91%",
+                dsa: "61%",
+                api: "79%",
+                logo: "I"
+            }
+        };
+
+        const previewScore = document.querySelector(".preview-score strong");
+        const previewRole = document.querySelector(".preview-company small");
+        const previewLogo = document.querySelector(".preview-company .choice-logo");
+
+        const pythonBar = document.querySelector(".bar-python span");
+        const sqlBar = document.querySelector(".bar-sql span");
+        const dsaBar = document.querySelector(".bar-dsa span");
+        const apiBar = document.querySelector(".bar-api span");
+
+        function setBar(element, value) {
+            element.style.width = value;
+        }
+
+        companyChoices.forEach(function (choice) {
+            choice.addEventListener("click", function () {
+
+                companyChoices.forEach(function (item) {
+                    item.classList.remove("active");
+                });
+
+                choice.classList.add("active");
+
+                const name = choice.querySelector(".choice-copy strong").textContent.trim();
+                const data = companyData[name];
+
+                if (!data) {
+                    return;
+                }
+
+                previewScore.textContent = data.score;
+                previewRole.textContent = data.role;
+                previewLogo.textContent = data.logo;
+
+                setBar(pythonBar, data.python);
+                setBar(sqlBar, data.sql);
+                setBar(dsaBar, data.dsa);
+                setBar(apiBar, data.api);
+            });
+        });
+
+        /* =========================================================
+           VISUAL MODE BUTTON
+           ========================================================= */
+
+        const themeBtn = document.getElementById("themeBtn");
+
+        let softMode = false;
+
+        themeBtn.addEventListener("click", function () {
+            softMode = !softMode;
+
+            if (softMode) {
+                document.documentElement.style.setProperty(
+                    "--bg",
+                    "#070a16"
+                );
+
+                document.documentElement.style.setProperty(
+                    "--surface",
+                    "#0d1427"
+                );
+
+                document.documentElement.style.setProperty(
+                    "--muted",
+                    "#9ca9c1"
+                );
+
+                themeBtn.textContent = "☀";
+            } else {
+                document.documentElement.style.setProperty(
+                    "--bg",
+                    "#040611"
+                );
+
+                document.documentElement.style.setProperty(
+                    "--surface",
+                    "#0a0f21"
+                );
+
+                document.documentElement.style.setProperty(
+                    "--muted",
+                    "#8c99b4"
+                );
+
+                themeBtn.textContent = "◐";
+            }
+        });
+
+        /* =========================================================
+           ACTIVE SECTION NAVIGATION
+           ========================================================= */
+
+        const sections = document.querySelectorAll(
+            "main section[id]"
+        );
+
+        const sectionObserver = new IntersectionObserver(
+            function (entries) {
+
+                entries.forEach(function (entry) {
+
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+
+                    const id = entry.target.getAttribute("id");
+
+                    document.querySelectorAll(".nav-link").forEach(
+                        function (link) {
+
+                            link.classList.remove("active");
+
+                            const target =
+                                link.getAttribute("href");
+
+                            if (target === "#" + id) {
+                                link.classList.add("active");
+                            }
+                        }
+                    );
+                });
+            },
+            {
+                rootMargin: "-35% 0px -55% 0px",
+                threshold: 0
+            }
+        );
+
+        sections.forEach(function (section) {
+            sectionObserver.observe(section);
+        });
+
+        /* =========================================================
+           KEYBOARD ACCESSIBILITY
+           ========================================================= */
+
+        document.addEventListener("keydown", function (event) {
+
+            if (event.key === "Escape") {
+
+                navLinks.classList.remove("open");
+
+                navToggle.textContent = "☰";
+            }
+        });
+
+        /* =========================================================
+           PREVENT EMPTY HASH JUMP
+           ========================================================= */
+
+        document.querySelectorAll('a[href="#"]').forEach(
+            function (link) {
+
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                });
+            }
+        );
+
+        /* =========================================================
+           INITIAL PAGE STATE
+           ========================================================= */
+
+        window.addEventListener("load", function () {
+
+            document.body.classList.add("page-ready");
+
+            const firstReveal = document.querySelector(
+                ".hero-copy"
+            );
+
+            if (firstReveal) {
+                firstReveal.style.opacity = "1";
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>
