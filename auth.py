@@ -51,7 +51,7 @@ def ensure_pending_table():
 
 def send_otp_email(recipient_email, otp):
     """Send a registration OTP using Resend API (Render-friendly)."""
-resend.api_key = os.environ.get("RESEND_API_KEY")
+    resend.api_key = os.environ.get("RESEND_API_KEY")
 
     try:
         params = {
@@ -72,7 +72,6 @@ resend.api_key = os.environ.get("RESEND_API_KEY")
     except Exception as e:
         print("Resend Error:", e)
         raise RuntimeError(f"Email could not be sent: {e}")
-
 
 def send_welcome_email(recipient_email, fullname):
     """Send a confirmation after the account is actually created."""
