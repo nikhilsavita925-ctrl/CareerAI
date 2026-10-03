@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 from email.message import EmailMessage
 import secrets
 import smtplib
-
+import resend
+import os
 from functools import wraps
 
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
@@ -49,44 +50,28 @@ def ensure_pending_table():
 
 
 def send_otp_email(recipient_email, otp):
-    """Send a registration OTP through the configured SMTP sender account."""
-    username = current_app.config.get("MAIL_USERNAME", "").strip()
-    password = current_app.config.get("MAIL_PASSWORD", "").strip()
-    server = current_app.config.get("MAIL_SERVER", "smtp.gmail.com")
-    port = int(current_app.config.get("MAIL_PORT", 587))
-    use_tls = current_app.config.get("MAIL_USE_TLS", True)
+    """Send a registration OTP using Resend API (Render-friendly)."""
+resend.api_key = os.environ.get("RESEND_API_KEY")
 
-    if not username or not password:
-        raise RuntimeError(
-            "Email is not configured. Set MAIL_USERNAME and MAIL_PASSWORD in your .env file."
-        )
-
-    msg = EmailMessage()
-    msg["Subject"] = "CareerAI - Verify your email"
-    msg["From"] = username
-    msg["To"] = recipient_email
-    msg.set_content(
-        f"""Hi,
-
-Your CareerAI verification OTP is: {otp}
-
-This OTP is valid for {current_app.config.get('OTP_EXPIRY_MINUTES', 10)} minutes.
-Do not share this code with anyone.
-
-If you did not try to create a CareerAI account, you can ignore this email.
-
-Regards,
-CareerAI Team
-"""
-    )
-
-    with smtplib.SMTP(server, port, timeout=20) as smtp:
-        smtp.ehlo()
-        if use_tls:
-            smtp.starttls()
-            smtp.ehlo()
-        smtp.login(username, password)
-        smtp.send_message(msg)
+    try:
+        params = {
+            "from": "CareerAI <onboarding@resend.dev>",
+            "to": [recipient_email],
+            "subject": "CareerAI - Verify your email",
+            "html": f"""
+                <p>Hi,</p>
+                <p>Your CareerAI verification OTP is: <strong>{otp}</strong></p>
+                <p>This OTP is valid for 10 minutes. Do not share this code with anyone.</p>
+                <br>
+                <p>Regards,<br>CareerAI Team</p>
+            """
+        }
+        resend.Emails.send(params)
+        print(f"OTP sent successfully to {recipient_email}")
+        return True
+    except Exception as e:
+        print("Resend Error:", e)
+        raise RuntimeError(f"Email could not be sent: {e}")
 
 
 def send_welcome_email(recipient_email, fullname):
@@ -169,8 +154,8 @@ def register():
         pending_id = query(
             """
             INSERT INTO pending_registrations
-                (fullname, email, phone, college, course, semester, skills,
-                 otp_hash, otp_expires_at, otp_verified)
+                (fullname, email, phone, college, course, semester, skills,  
+                  otp_hash, otp_expires_at, otp_verified)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 0)
             """,
             (fullname, email, phone, college, course, semester, skills,
