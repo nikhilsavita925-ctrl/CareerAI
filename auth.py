@@ -50,27 +50,45 @@ def ensure_pending_table():
 
 
 def send_otp_email(recipient_email, otp):
-    """Send a registration OTP using Resend API (Render-friendly)."""
-    resend.api_key = os.environ.get("RESEND_API_KEY")
+    """Send a registration OTP using Brevo API (Render-friendly HTTP request)."""
+    api_key = os.environ.get("BREVO_API_KEY")
+    sender_email = os.environ.get("SENDER_EMAIL")
+
+    if not api_key or not sender_email:
+        raise RuntimeError("Brevo configuration missing (BREVO_API_KEY or SENDER_EMAIL).")
+
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json"
+    }
+    payload = {
+        "sender": {
+            "name": "CareerAI",
+            "email": sender_email
+        },
+        "to": [{"email": recipient_email}],
+        "subject": "CareerAI - Verify your email",
+        "htmlContent": f"""
+            <p>Hi,</p>
+            <p>Your CareerAI verification OTP is: <strong style="font-size: 20px; color: #2b7fff;">{otp}</strong></p>
+            <p>This OTP is valid for 10 minutes. Do not share this code with anyone.</p>
+            <br>
+            <p>Regards,<br>CareerAI Team</p>
+        """
+    }
 
     try:
-        params = {
-            "from": "CareerAI <onboarding@resend.dev>",
-            "to": [recipient_email],
-            "subject": "CareerAI - Verify your email",
-            "html": f"""
-                <p>Hi,</p>
-                <p>Your CareerAI verification OTP is: <strong>{otp}</strong></p>
-                <p>This OTP is valid for 10 minutes. Do not share this code with anyone.</p>
-                <br>
-                <p>Regards,<br>CareerAI Team</p>
-            """
-        }
-        resend.Emails.send(params)
-        print(f"OTP sent successfully to {recipient_email}")
-        return True
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        if response.status_code == 201:
+            print(f"OTP sent successfully to {recipient_email}")
+            return True
+        else:
+            print("Brevo Error:", response.status_code, response.text)
+            raise RuntimeError(f"Email could not be sent: {response.text}")
     except Exception as e:
-        print("Resend Error:", e)
+        print("Send OTP Error:", e)
         raise RuntimeError(f"Email could not be sent: {e}")
 
 def send_welcome_email(recipient_email, fullname):
