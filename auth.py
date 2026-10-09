@@ -1,3 +1,4 @@
+import requests
 from datetime import datetime, timedelta
 from email.message import EmailMessage
 import secrets
